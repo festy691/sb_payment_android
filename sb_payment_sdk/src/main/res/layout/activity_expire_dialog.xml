@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@android:style/Theme.Holo.Dialog"
+    android:layout_width="320dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    app:cornerRadius="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="48dp"
+    android:background="@color/white"
+    tools:context=".dialogs.ExpireDialog">
+
+    <View
+        android:id="@+id/image"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_marginTop="64dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/warning" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="24dp"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/hk_grotesk_regular"
+        android:text="@string/account_expired"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textFontWeight="700"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="20dp"
+        android:fontFamily="@font/hk_grotesk_regular"
+        android:gravity="center_horizontal"
+        android:text="@string/acc_expired_content"
+        android:textColor="@color/black"
+        android:textFontWeight="400"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/confirmExpireBtn"
+        android:layout_width="229dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="38dp"
+        android:layout_marginEnd="10dp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/darkOrange"
+        android:fontFamily="@font/hk_grotesk_regular"
+        android:text="@string/change_payment_method"
+        android:textStyle="bold"
+        android:textFontWeight="600"
+        app:icon="@drawable/change_white"
+        app:iconPadding="4dp"
+        app:iconSize="16dp"
+        app:iconTint="@color/white"
+        android:layout_gravity="center_horizontal"
+        app:cornerRadius="8dp" />
+
+</LinearLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">Start Payment</string>
+    <string name="change_underline_text"><u>Change</u></string>
+    <string name="change_payment_underline_text"><u>Change payment method</u></string>
+    <string name="timer_text">This account will <b>Expire</b> in </string>
+    <string name="pay_now">Pay with card</string>
+    <string name="i_ve_sent_the_money">I’ve sent the money</string>
+    <string name="bank_transfer">Bank transfer</string>
+    <string name="debit_card">Debit card</string>
+    <string name="acc_expired_content">This account has expired, please use an alternative payment method.</string>
+    <string name="transaction_msg">We have confirmed your transaction, and it is currently processing.</string>
+    <string name="change_payment_method">Change payment method</string>
+    <string name="account_expired">Account expired</string>
+    <string name="instruction_text">Please transfer to the account provided below, make sure to use the Narration given below.</string>
+</resources>
