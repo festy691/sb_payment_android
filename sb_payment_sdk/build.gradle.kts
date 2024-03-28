@@ -63,7 +63,7 @@ afterEvaluate {
                 from(components.findByName("android"))
                 groupId = "com.github.festy691"
                 artifactId = "sb_payment_sdk"
-                version = "0.0.2"
+                version = "0.0.3"
             }
         }
     }
