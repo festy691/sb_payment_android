@@ -3,6 +3,7 @@ package com.startbutton.sb_payment_sdk.APIServices;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.startbutton.sb_payment_sdk.models.ApiResponse;
+import com.startbutton.sb_payment_sdk.models.ManualVerificationResponse;
 import com.startbutton.sb_payment_sdk.models.PaymentInitModel;
 import com.startbutton.sb_payment_sdk.models.PaystackDetailResponse;
 import com.startbutton.sb_payment_sdk.models.TransferDetailResponse;
@@ -21,7 +22,7 @@ public class PaymentService {
     private static PaymentService instance;
 
     private static String BASE_URL_DEV = "https://api.startbutton.builditdigital.co/";
-    private static String BASE_URL_PROD = "https://api.startbutton.builditdigital.co/";
+    private static String BASE_URL_PROD = "https://api.startbutton.tech/";
     private static String BASE_URL = BASE_URL_DEV;
     private static ApiService apiService;
     private static ApiService apiServiceStream;
@@ -30,7 +31,7 @@ public class PaymentService {
 
     // Private constructor to prevent instantiation from outside the class
     private PaymentService(boolean isLive) {
-        BASE_URL = isLive ? BASE_URL_DEV : BASE_URL_PROD;
+        BASE_URL = isLive ? BASE_URL_PROD : BASE_URL_DEV;
         live = isLive;
 
         httpClientBuilder.connectTimeout(180, TimeUnit.SECONDS); // Increase timeout to 60 seconds
@@ -66,7 +67,7 @@ public class PaymentService {
     }
 
     // Public static method to provide access to the single instance of the class
-    public static synchronized PaymentService getInstance(Boolean isLive) {
+    public static synchronized PaymentService getInstance(boolean isLive) {
         // Lazy initialization: create the instance if it doesn't exist yet
         if (instance == null) {
             instance = new PaymentService(isLive);
@@ -83,7 +84,7 @@ public class PaymentService {
     public Call<TransferDetailResponse> initRequest(String token, PaymentInitModel payment){
         String contentType = "application/json";
         // Make the API call
-        return apiService.postData(live ? "live" : "dev", contentType, "Bearer "+token, payment);
+        return apiService.postData(contentType, "Bearer "+token, payment);
     }
 
     public Call<ApiResponse> initPaystack(String token, PaymentInitModel payment){

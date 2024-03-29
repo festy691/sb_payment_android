@@ -3,7 +3,6 @@ package com.startbutton.sb_payment_sdk.models;
 import java.io.Serializable;
 
 public class ManualVerificationModel implements Serializable {
-    String id;
     String toAccountNumber;
     String type;
     String customerName;
@@ -23,7 +22,6 @@ public class ManualVerificationModel implements Serializable {
     boolean otherFeeCollected;
 
     public ManualVerificationModel(String id, String toAccountNumber, String type, String customerName, int amount, String status, String transactionReference, String createdAt, String reference, String updatedAt, String transactionId, boolean isFee, String partnerId, String businessName, String merchantId, String transType, String customerId, boolean otherFeeCollected) {
-        this.id = id;
         this.toAccountNumber = toAccountNumber;
         this.type = type;
         this.customerName = customerName;
@@ -41,14 +39,6 @@ public class ManualVerificationModel implements Serializable {
         this.transType = transType;
         this.customerId = customerId;
         this.otherFeeCollected = otherFeeCollected;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getToAccountNumber() {

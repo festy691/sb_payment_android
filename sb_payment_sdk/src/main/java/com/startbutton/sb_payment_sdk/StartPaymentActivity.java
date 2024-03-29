@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -26,6 +25,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.startbutton.sb_payment_sdk.APIServices.ApiService;
 import com.startbutton.sb_payment_sdk.APIServices.PaymentService;
@@ -396,7 +396,7 @@ public class StartPaymentActivity extends AppCompatActivity {
                         });
                         successDialog.show();
                     } else {
-                        Log.d(TAG, "Charging Card");
+                        //Log.d(TAG, "Charging Card");
                         performCharge();
                     }
                 }
@@ -421,7 +421,7 @@ public class StartPaymentActivity extends AppCompatActivity {
                     if(isTransfer) {
                         confirmTransferStatus(transferDetailModel.getReference());
                     } else {
-                        Log.d(TAG, "Charging Card");
+                        //Log.d(TAG, "Charging Card");
                         performCharge();
                     }
                 }
@@ -537,7 +537,7 @@ public class StartPaymentActivity extends AppCompatActivity {
                 progressIndicator.setVisibility(View.INVISIBLE);
                 confirmationBtn.setText(R.string.pay_now);
                 confirmationBtn.setClickable(true);
-                Log.d(TAG, "beforeValidate: " + transaction.getReference());
+                //Log.d(TAG, "beforeValidate: " + transaction.getReference());
             }
 
             @Override
@@ -546,8 +546,8 @@ public class StartPaymentActivity extends AppCompatActivity {
                 progressIndicator.setVisibility(View.INVISIBLE);
                 confirmationBtn.setText(R.string.pay_now);
                 confirmationBtn.setClickable(true);
-                Log.e(TAG, "onError: " + error.getLocalizedMessage());
-                Log.e(TAG, "onError: " + error);
+                //Log.e(TAG, "onError: " + error.getLocalizedMessage());
+                //Log.e(TAG, "onError: " + error);
             }
 
         });
@@ -555,7 +555,7 @@ public class StartPaymentActivity extends AppCompatActivity {
 
     private void parseResponse(String transactionReference) {
         String message = "Payment Successful - " + transactionReference;
-        Log.d(TAG, message);
+        //Log.d(TAG, message);
     }
 
     void initializePaystack(String publicKey) {
@@ -571,9 +571,9 @@ public class StartPaymentActivity extends AppCompatActivity {
         Call<TransferDetailResponse> call = apiService.initRequest(pubKey, payment);
 
         String NETWORK_TAG = "INITIALIZE TRANSFER";
-        Log.d(NETWORK_TAG, call.request().headers().toString());
-        Log.d(NETWORK_TAG, call.request().url().toString());
-        Log.d(NETWORK_TAG, Objects.requireNonNull(call.request().body()).toString());
+        //Log.d(NETWORK_TAG, call.request().headers().toString());
+        //Log.d(NETWORK_TAG, call.request().url().toString());
+        //Log.d(NETWORK_TAG, Objects.requireNonNull(call.request().body()).toString());
 
         call.enqueue(new Callback<TransferDetailResponse>() {
             @Override
@@ -583,14 +583,14 @@ public class StartPaymentActivity extends AppCompatActivity {
                     // Handle successful response
                     // Create Gson instance
 
-                    Log.d(NETWORK_TAG, apiResponse.getData().toString());
-                    Log.d(NETWORK_TAG, apiResponse.getMessage());
+                    ////Log.d(NETWORK_TAG, apiResponse.getData().toString());
+                    ////Log.d(NETWORK_TAG, apiResponse.getMessage());
 
                     APIResponse result = new APIResponse(!apiResponse.isSuccess(), apiResponse.getMessage(), apiResponse.getData());
                     transferDetailModel = (TransferDetailModel) result.getData();
 
-                    Log.d(NETWORK_TAG, transferDetailModel.getAccountNumber());
-                    Log.d(NETWORK_TAG, transferDetailModel.getReference());
+                    ////Log.d(NETWORK_TAG, transferDetailModel.getAccountNumber());
+                    ////Log.d(NETWORK_TAG, transferDetailModel.getReference());
 
                     accountNameTextView.setText(transferDetailModel.getAccountName());
                     accountNumberTextView.setText(transferDetailModel.getAccountNumber());
@@ -644,7 +644,7 @@ public class StartPaymentActivity extends AppCompatActivity {
                     LoaderUtil.hideDialog();
                     streamTransferResponse(transferDetailModel.getReference());
                 } else {
-                    Log.e(NETWORK_TAG, response.message());
+                    //Log.e(NETWORK_TAG, response.message());
                     // Handle error response
                     APIResponse result = new APIResponse(true, response.message(), null);
                     returnErrorResult(result.getMessage());
@@ -654,7 +654,7 @@ public class StartPaymentActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<TransferDetailResponse> call, Throwable t) {
-                Log.e(NETWORK_TAG, t.getMessage());
+                //Log.e(NETWORK_TAG, t.getMessage());
                 // Handle network errors
                 APIResponse result = new APIResponse(true, t.getMessage(), null);
                 returnErrorResult(result.getMessage());
@@ -672,9 +672,9 @@ public class StartPaymentActivity extends AppCompatActivity {
         Call<ApiResponse> call = apiService.initPaystack(pubKey, payment);
 
         String NETWORK_TAG = "INITIALIZE PAYSTACK";
-        Log.d(NETWORK_TAG, call.request().headers().toString());
-        Log.d(NETWORK_TAG, call.request().url().toString());
-        Log.d(NETWORK_TAG, Objects.requireNonNull(call.request().body()).toString());
+        //Log.d(NETWORK_TAG, call.request().headers().toString());
+        //Log.d(NETWORK_TAG, call.request().url().toString());
+        //Log.d(NETWORK_TAG, Objects.requireNonNull(call.request().body()).toString());
 
         call.enqueue(new Callback<ApiResponse>() {
             @Override
@@ -684,14 +684,14 @@ public class StartPaymentActivity extends AppCompatActivity {
                     // Handle successful response
                     // Create Gson instance
 
-                    Log.d(NETWORK_TAG, apiResponse.getData().toString());
-                    Log.d(NETWORK_TAG, apiResponse.getMessage());
+                    //Log.d(NETWORK_TAG, apiResponse.getData().toString());
+                    //Log.d(NETWORK_TAG, apiResponse.getMessage());
 
                     APIResponse result = new APIResponse(!apiResponse.isSuccess(), apiResponse.getMessage(), apiResponse.getData());
                     String token = result.getData().toString().split("#/")[1];
                     decodePaystackToken(token);
                 } else {
-                    Log.e(NETWORK_TAG, response.message());
+                    //Log.e(NETWORK_TAG, response.message());
                     // Handle error response
                     APIResponse result = new APIResponse(true, response.message(), null);
                     returnErrorResult(result.getMessage());
@@ -701,7 +701,7 @@ public class StartPaymentActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Log.e(NETWORK_TAG, t.getMessage());
+                //Log.e(NETWORK_TAG, t.getMessage());
                 // Handle network errors
                 APIResponse result = new APIResponse(true, t.getMessage(), null);
                 returnErrorResult(result.getMessage());
@@ -715,8 +715,8 @@ public class StartPaymentActivity extends AppCompatActivity {
         Call<PaystackDetailResponse> call = apiService.decodeToken(pubKey, token);
 
         String NETWORK_TAG = "DECODE PAYSTACK";
-        Log.d(NETWORK_TAG, call.request().headers().toString());
-        Log.d(NETWORK_TAG, call.request().url().toString());
+        //Log.d(NETWORK_TAG, call.request().headers().toString());
+        //Log.d(NETWORK_TAG, call.request().url().toString());
 
         call.enqueue(new Callback<PaystackDetailResponse>() {
             @Override
@@ -726,15 +726,15 @@ public class StartPaymentActivity extends AppCompatActivity {
                     // Handle successful response
                     // Create Gson instance
 
-                    Log.d(NETWORK_TAG, apiResponse.getData().toString());
-                    Log.d(NETWORK_TAG, apiResponse.getMessage());
+                    //Log.d(NETWORK_TAG, apiResponse.getData().toString());
+                    //Log.d(NETWORK_TAG, apiResponse.getMessage());
 
                     APIResponse result = new APIResponse(!apiResponse.isSuccess(), apiResponse.getMessage(), apiResponse.getData());
                     paystackDetailModel = (PaystackDetailModel) result.getData();
                     initializePaystack(paystackDetailModel.getPublicKey());
                     LoaderUtil.hideDialog();
                 } else {
-                    Log.e(NETWORK_TAG, response.message());
+                    //Log.e(NETWORK_TAG, response.message());
                     // Handle error response
                     APIResponse result = new APIResponse(true, response.message(), null);
                     returnErrorResult(result.getMessage());
@@ -744,7 +744,7 @@ public class StartPaymentActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<PaystackDetailResponse> call, Throwable t) {
-                Log.e(NETWORK_TAG, t.getMessage());
+                //Log.e(NETWORK_TAG, t.getMessage());
                 // Handle network errors
                 APIResponse result = new APIResponse(true, t.getMessage(), null);
                 returnErrorResult(result.getMessage());
@@ -763,8 +763,8 @@ public class StartPaymentActivity extends AppCompatActivity {
         Call<ApiResponse> call = apiService.confirmTransferStatus(pubKey, ref);
 
         String NETWORK_TAG = "MANUAL CONFIRMATION";
-        Log.d(NETWORK_TAG, call.request().headers().toString());
-        Log.d(NETWORK_TAG, call.request().url().toString());
+        //Log.d(NETWORK_TAG, call.request().headers().toString());
+        //Log.d(NETWORK_TAG, call.request().url().toString());
 
         call.enqueue(new Callback<ApiResponse>() {
             @Override
@@ -774,15 +774,19 @@ public class StartPaymentActivity extends AppCompatActivity {
                     // Handle successful response
                     // Create Gson instance
 
-                    Log.d(NETWORK_TAG, apiResponse.getData().toString());
-                    Log.d(NETWORK_TAG, apiResponse.getMessage());
-
-                    APIResponse result = new APIResponse(!apiResponse.isSuccess(), apiResponse.getMessage(), apiResponse.getData());
+                    //Log.d(NETWORK_TAG, apiResponse.getData().toString());
+                    //Log.d(NETWORK_TAG, apiResponse.getMessage());
                     isPaying = false;
                     progressIndicator.setVisibility(View.INVISIBLE);
                     confirmationBtn.setText(R.string.i_ve_sent_the_money);
                     confirmationBtn.setClickable(true);
 
+                    APIResponse result = new APIResponse(!apiResponse.isSuccess(), apiResponse.getMessage(), apiResponse.getData());
+                    String status = ((LinkedTreeMap<?, ?>) result.getData()).get("status").toString();;
+                    if(!Objects.equals(status, "verified") && !Objects.equals(status, "successful")){
+                        Toast.makeText(StartPaymentActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     SuccessDialog successDialog = new SuccessDialog(StartPaymentActivity.this);
                     successDialog.setCallback((data) -> {
                         // Handle the result here
@@ -804,14 +808,19 @@ public class StartPaymentActivity extends AppCompatActivity {
                                 isoDateTime = now.format(formatter);
                             }
                             DataResponse dataResponse = new DataResponse(transferDetailModel.getReference(), amount, email, currencyType, "", "","", "successful", "Card", isoDateTime);
+
                             Gson gson = new Gson();
+
                             String jsonData = gson.toJson(dataResponse);
                             returnResult("Transaction successful", jsonData);
                         }
                     });
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                    }
                     successDialog.show();
                 } else {
-                    Log.e(NETWORK_TAG, response.message());
+                    //Log.e(NETWORK_TAG, response.message());
                     // Handle error response
                     APIResponse result = new APIResponse(true, response.message(), null);
                     //returnErrorResult(result.getMessage());
@@ -824,7 +833,7 @@ public class StartPaymentActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Log.e(NETWORK_TAG, t.getMessage());
+                //Log.e(NETWORK_TAG, t.getMessage());
                 // Handle network errors
                 APIResponse result = new APIResponse(true, t.getMessage(), null);
                 //returnErrorResult(result.getMessage());
@@ -842,7 +851,7 @@ public class StartPaymentActivity extends AppCompatActivity {
 
         String contentType = "application/json";
 
-        Log.d(NETWORK_TAG, "Starting Streaming Service ========================>");
+        //Log.d(NETWORK_TAG, "Starting Streaming Service ========================>");
         Disposable disposable = apiService.streamResponse(isLive ? "live" : "dev", contentType, "Bearer "+pubKey, ref)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.from(new Executor() {
@@ -852,21 +861,22 @@ public class StartPaymentActivity extends AppCompatActivity {
                 public void execute(Runnable command) {
                     handler.post(command);
 
-                    Log.d(NETWORK_TAG, "Handler started ========================>");
+                    //Log.d(NETWORK_TAG, "Handler started ========================>");
                 }
             }))
             .subscribeWith(new DisposableObserver<String>() {
                 @Override
                 public void onNext(String apiResponse) {
                     // Handle API response
-                    Log.d(NETWORK_TAG, apiResponse.split("data: ")[1]);
-                    Log.d(NETWORK_TAG, "Receiving Streaming Service update ========================>");
+                    //Log.d(NETWORK_TAG, apiResponse.split("data: ")[1]);
+                    //Log.d(NETWORK_TAG, "Receiving Streaming Service update ========================>");
                     Gson gson = new Gson();
 
                     // Convert the string to a JSON object
                     JsonObject jsonObject = gson.fromJson(apiResponse.split("data: ")[1], JsonObject.class);
-                    Log.d(NETWORK_TAG, jsonObject.get("status").getAsString());
-                    if(Objects.equals(jsonObject.get("status").getAsString(), "successful") || Objects.equals(jsonObject.get("status").getAsString(), "initiated")){
+                    //Log.d(NETWORK_TAG, jsonObject.get("status").getAsString());
+                    String status = jsonObject.get("status").getAsString();
+                    if(Objects.equals(status, "successful") || Objects.equals(status, "verified")){
                         isPaying = false;
                         progressIndicator.setVisibility(View.INVISIBLE);
                         confirmationBtn.setText(R.string.i_ve_sent_the_money);
@@ -897,6 +907,9 @@ public class StartPaymentActivity extends AppCompatActivity {
                                 returnResult("Transaction successful", jsonData);
                             }
                         });
+                        if (countDownTimer != null) {
+                            countDownTimer.cancel();
+                        }
                         successDialog.show();
                     }
                 }
@@ -904,15 +917,15 @@ public class StartPaymentActivity extends AppCompatActivity {
                 @Override
                 public void onError(Throwable e) {
                     // Handle error
-                    Log.e(NETWORK_TAG, e.getMessage());
-                    Log.e(NETWORK_TAG, "Receiving Streaming Message Error ========================>");
+                    //Log.e(NETWORK_TAG, e.getMessage());
+                    //Log.e(NETWORK_TAG, "Receiving Streaming Message Error ========================>");
 
                 }
 
                 @Override
                 public void onComplete() {
                     // Handle completion
-                    Log.d(NETWORK_TAG, "Stopping Streaming Service ========================>");
+                    //Log.d(NETWORK_TAG, "Stopping Streaming Service ========================>");
                 }
             });
 

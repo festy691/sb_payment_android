@@ -22,7 +22,7 @@ public interface ApiService {
     Observable<String> streamResponse(@Header("x-environment") String environment, @Header("Content-Type") String contentType, @Header("Authorization") String authorization, @Query("txnRef") String txnRef);
 
     @POST("transaction/initialize-s2s")
-    Call<TransferDetailResponse> postData(@Header("x-environment") String environment, @Header("Content-Type") String contentType, @Header("Authorization") String authorization, @Body PaymentInitModel payment);
+    Call<TransferDetailResponse> postData(@Header("Content-Type") String contentType, @Header("Authorization") String authorization, @Body PaymentInitModel payment);
 
     @POST("transaction/verify-va-collection/{ref}")
     Call<ApiResponse> confirmTransferStatus(@Header("x-environment") String environment, @Header("Content-Type") String contentType, @Header("Authorization") String authorization, @Path("ref") String ref);
