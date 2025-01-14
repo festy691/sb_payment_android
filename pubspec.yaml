@@ -1,0 +1,49 @@
+name: sb_payment_sdk
+description: Official SB Payment SDK
+version: 0.1.0
+homepage: https://github.com/Startbutton-Engineering/payment-sdk-flutter.git
+
+environment:
+  sdk: '>=2.18.6 <3.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  injectable: ^2.1.0
+  dio: ^4.0.0
+  equatable: ^2.0.3
+  intl: ^0.17.0
+  provider: ^6.0.5
+  get_it: ^7.2.0
+  http: ^0.13.3
+  shared_preferences:
+  another_flushbar: ^1.12.30
+  flutter_screenutil: ^5.0.0+2
+  get: ^4.6.5
+  flutter_paystack: ^1.0.7
+  webview_flutter: ^2.8.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+# The following section is specific to Flutter packages.
+flutter:
+
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/images/
+
+  fonts:
+    - family: hkgrotesk
+      fonts:
+        - asset: assets/fonts/hk-grotesk.regular.otf
+
+    - family: satoshi
+      fonts:
+        - asset: assets/fonts/Satoshi-Regular.otf
