@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sb_payment_sdk/core/utils/constants.dart';
+import 'package:sb_payment_sdk/core/utils/page_router.dart';
 import 'package:sb_payment_sdk/core/utils/pallet.dart';
-import 'package:sb_payment_sdk/core/widget/custom_appbar.dart';
+
+typedef OnPopResult = Function(bool, Object?);
 
 class BackgroundWidget extends StatelessWidget {
   final Widget body;
@@ -11,55 +12,44 @@ class BackgroundWidget extends StatelessWidget {
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
   final bool hasPadding;
-  final bool hasAppBar;
   final Color backgroundColor;
+  final Widget? drawer;
+  final AppBar? appBar;
+  final bool? shouldExit;
+  final OnPopResult? onPopResult;
+  final GlobalKey<ScaffoldState>? scaffoldKey;
 
   const BackgroundWidget({
     Key? key,
     required this.body,
     this.actions,
     this.hasPadding = false,
+    this.shouldExit = false,
     this.leadingWidget,
     this.titleWidget,
     this.bottomNavigationBar,
     this.floatingActionButton,
-    this.hasAppBar = true,
+    this.drawer,
+    this.appBar,
+    this.scaffoldKey,
+    this.onPopResult,
     this.backgroundColor = Pallet.white,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: hasAppBar
-          ? appBar(
-              context,
-              actions: actions,
-              leadingWidget: leadingWidget,
-              titleWidget: titleWidget,
-            )
-          : null,
-      floatingActionButton: floatingActionButton,
-      body: Container(
-        width: getWidth(context),
-        height: getHeight(context),
-        decoration: BoxDecoration(
-          color: backgroundColor
-        //   gradient: LinearGradient(
-        //     begin: Alignment(0.00, -1.00),
-        //     end: Alignment(0, 1),
-        //     colors: [
-        //       Pallet.primaryLight,
-        //       Pallet.primaryDark,
-        //     ],
-        //   ),
-        ),
-        padding: hasPadding
-            ? const EdgeInsets.only(left: 20, right: 20, bottom: 16)
-            : const EdgeInsets.only(top: 0),
-        child: body,
+    return PopScope(
+      canPop: shouldExit ?? false,
+      onPopInvokedWithResult: onPopResult ?? (status, result) {},
+      child: Scaffold(
+        key: scaffoldKey,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: appBar,
+        floatingActionButton: floatingActionButton,
+        drawer: drawer,
+        body: body,
+        bottomNavigationBar: bottomNavigationBar,
       ),
-      bottomNavigationBar: bottomNavigationBar,
     );
   }
 }

@@ -1,19 +1,17 @@
 import 'dart:ui';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:intl_phone_field/phone_number.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sb_payment_sdk/core/utils/app_theme.dart';
-import 'package:sb_payment_sdk/core/utils/constants.dart';
 import 'package:sb_payment_sdk/core/utils/pallet.dart';
 import 'package:sb_payment_sdk/core/widget/text_views.dart';
 
-import '../data/session_manager.dart';
-import '../utils/app_value.dart';
-
-class EditFormField extends StatefulWidget {
+class EditFormField extends StatelessWidget {
   EditFormField({
-    this.label,
+    this.label = '',
     this.hint,
     this.prefixIcon,
     this.suffixIcon,
@@ -32,37 +30,29 @@ class EditFormField extends StatefulWidget {
     this.readOnly = false,
     this.ignore = false,
     this.obscureText = false,
+    this.shakeKey,
     this.isborderDecoration = true,
     this.onTapped,
     this.keyboardType,
     this.maxLines = 1,
     this.minLines = 1,
-    this.isFilled = false,
     this.maxLength,
     this.inputFormatters,
-    //this.focusedColorBorder = Colors.white,
+    this.focusedColorBorder = Colors.white,
     this.labelStyle,
-    this.fillColor,
-    this.hasShadow = false,
     this.hintStyle,
     this.textStyle,
     this.decoration,
     this.iconColor,
-    this.isRequired = false,
-    this.isHeader = false,
-    this.isPassword = false,
     this.textCapitalization = TextCapitalization.none,
     this.key,
-    this.focusedColorBorder,
     this.showInfo = false,
-    FocusNode? focusNode,
+    this.focusNode,
     this.floatingLabelBehavior = FloatingLabelBehavior.never,
-    this.horizontalpadding,
-    this.verticalpadding,
   });
 
   TextCapitalization textCapitalization;
-  String? label;
+  String label;
   String? hint;
   IconData? prefixIcon;
   IconData? suffixIcon;
@@ -80,21 +70,15 @@ class EditFormField extends StatefulWidget {
   String? initialValue;
   TextEditingController? controller;
   FocusNode? focusNode;
-  final double? horizontalpadding;
-  final double? verticalpadding;
+
   bool autocorrect;
   bool autoValidate;
   bool readOnly;
-  bool isFilled;
   bool showInfo;
   bool ignore;
   bool obscureText;
   bool isborderDecoration;
-  final bool? isRequired;
-  final bool? isHeader;
-  final bool? isPassword;
-  final Color? fillColor;
-  final bool hasShadow;
+
   // bool clickable;
   Function()? onTapped;
 
@@ -106,189 +90,347 @@ class EditFormField extends StatefulWidget {
   int minLines;
   int? maxLength;
   var inputFormatters;
-  final Color? focusedColorBorder;
+  Color focusedColorBorder;
   final TextStyle? labelStyle;
   final TextStyle? hintStyle;
   final TextStyle? textStyle;
   InputDecoration? decoration;
   FloatingLabelBehavior floatingLabelBehavior;
   Key? key;
+  final shakeKey;
 
-  @override
-  State<EditFormField> createState() => _EditFormFieldState();
-}
-
-class _EditFormFieldState extends State<EditFormField> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // widget.focusNode ??= FocusNode();
-  }
-
-  bool obscureText = true;
-  void showPassword() {
-    setState(() {
-      obscureText = !obscureText;
-    });
-  }
-
-  Color focusBgColor = Colors.transparent;
-  Color focusBorderColor = Pallet.grey.shade50;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        widget.isRequired! || widget.isHeader!
-            ? Row(
+    focusedColorBorder = Theme.of(context).brightness == Brightness.dark
+        ? Pallet.white
+        : Pallet.grey;
+    return InkWell(
+      onTap: onTapped,
+      child: IgnorePointer(
+        ignoring: ignore,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            widget.isRequired!
-                ? TextView(
-              text: "*",
-              textStyle: captionStyle.copyWith(
-                  fontSize: 16, color: Pallet.error),
-            )
-                : SizedBox(),
-            TextView(
-              text: widget.label ?? "",
-              textAlign: TextAlign.center,
-              textStyle: captionStyle.copyWith(
-                color: Pallet.black,
-              ),
-            ),
-          ],
-        )
-            : SizedBox(),
-        SizedBox(
-          height: 6.h,
-        ),
-        InkWell(
-          onTap: widget.onTapped ?? () {},
-          child: IgnorePointer(
-            ignoring: widget.ignore,
-            child: Theme(
-              data: Theme.of(context)
-                  .copyWith(splashColor: Colors.transparent),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: widget.isFilled
-                        ? widget.fillColor ?? Color(0xFFEFEFEF)
-                        : focusBgColor,
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(
-                        width: 1.w,
-                        color: widget.focusedColorBorder ??
-                            focusBorderColor)),
-                child: Row(
-                  children: [
-                    widget.prefixWidget == null
-                        ? SizedBox()
-                        : widget.prefixWidget!,
-                    Expanded(
-                      child: TextFormField(
-                        key: widget.key,
-                        keyboardType: widget.keyboardType,
-                        maxLines: widget.maxLines,
-                        minLines: widget.minLines,
-                        readOnly: widget.readOnly,
-                        focusNode: widget.focusNode,
-                        textCapitalization: widget.textCapitalization,
-                        onSaved: widget.onSaved,
-                        autocorrect: widget.autocorrect,
-                        initialValue: widget.initialValue,
-                        onChanged: (text) {
-                          if (widget.onChanged != null) {
-                            widget.onChanged!(text);
-                          }
-                          if (text.isNotEmpty) {
-                            focusBgColor = Pallet.grey.shade500;
-                            focusBorderColor = Pallet.grey.shade100;
-                            if (mounted) {
-                              setState(() {});
-                            }
-                          } else {
-                            focusBgColor = Colors.transparent;
-                            focusBorderColor = Pallet.grey.shade50;
-                            if (mounted) {
-                              setState(() {});
-                            }
-                          }
-                        },
-                        style: widget.textStyle ??
-                            titleStyle.copyWith(
-                              color: Pallet.black,
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w400,
-                            ),
-                        controller: widget.controller,
-                        inputFormatters: widget.inputFormatters ??
-                            [
-                              LengthLimitingTextInputFormatter(
-                                  widget.maxLength ?? 100),
-                            ],
-                        obscureText:
-                        widget.isPassword! ? obscureText : false,
-                        decoration: widget.decoration ??
-                            InputDecoration(
-                              filled: false,
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal:
-                                  widget.horizontalpadding ??
-                                      setWidth(20),
-                                  vertical: widget.verticalpadding ??
-                                      setHeight(14)),
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              border: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              suffixIconConstraints:
-                              const BoxConstraints(minHeight: 1),
-                              hintText: widget.hint,
-                              hintStyle:
-                              widget.hintStyle ?? captionStyle,
-                              labelText:
-                              widget.isRequired! || widget.isHeader!
-                                  ? null
-                                  : widget.label,
-                              isDense: true,
-                              labelStyle:
-                              widget.labelStyle ?? captionStyle,
-                              prefixIcon: widget.prefixIcon != null
-                                  ? IconButton(
-                                  onPressed:
-                                  widget.onPasswordToggle,
-                                  icon: Icon(
-                                    widget.prefixIcon,
-                                    color: widget.iconColor ??
-                                        Pallet.grey
-                                            .withOpacity(0.7),
-                                  ))
-                                  : null,
-                              errorStyle: const TextStyle(
-                                  fontSize: 0, height: 0.0),
-                              suffixIcon: widget.isPassword!
-                                  ? Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 20),
-                                child: InkWell(
-                                    onTap: showPassword,
-                                    child: obscureText
-                                        ? const Icon(Icons.visibility_off)
-                                        : const Icon(Icons.visibility)),
-                              )
-                                  : widget.suffixWidget,
-                            ),
-                      ),
+            if (label.isNotEmpty)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextView(
+                    text: label,
+                    textAlign: TextAlign.center,
+                    textStyle: GoogleFonts.hankenGrotesk(
+                      fontSize: 14.sp,
+                      color: Pallet.textColorLight,
+                      height: 1.43,
                     ),
-                  ],
+                  ),
+                  if (showInfo)
+                    GestureDetector(
+                      onTap: onTapInfo,
+                      child: Icon(Icons.info_outline, size: 16.w),
+                    ),
+                ],
+              ),
+            if (label.isNotEmpty)
+              SizedBox(
+                height: 8.h,
+              ),
+            Theme(
+              data: Theme.of(context).copyWith(splashColor: Colors.transparent),
+              child: Container(
+                decoration: ShapeDecoration(
+                  color: Pallet.lightGrayAccent.withOpacity(0.3),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                ),
+                child: TextFormField(
+                  key: key,
+                  keyboardType: keyboardType,
+                  maxLines: maxLines,
+                  minLines: minLines,
+                  //enabled: enabled,
+                  readOnly: readOnly,
+                  textCapitalization: textCapitalization,
+                  onSaved: onSaved,
+                  validator: validator,
+                  autocorrect: autocorrect,
+                  initialValue: initialValue,
+                  obscureText: obscureText,
+                  onChanged: onChanged,
+                  style: textStyle ??
+                      GoogleFonts.hankenGrotesk(
+                        color: Pallet.gray,
+                        fontSize: 16.sp,
+                        height: 1.57,
+                      ),
+                  controller: controller,
+                  autovalidateMode: autoValidateMode,
+                  inputFormatters: inputFormatters ??
+                      [
+                        LengthLimitingTextInputFormatter(maxLength ?? 100),
+                      ],
+                  decoration: decoration ??
+                      InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: 24.w, vertical: 16.h),
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        errorBorder: const OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        // floatingLabelBehavior: FloatingLabelBehavior.always,
+                        hintText: hint,
+                        hintStyle: hintStyle ??
+                            GoogleFonts.hankenGrotesk(
+                              color: Pallet.grayAccent,
+                              fontSize: 16.sp,
+                              height: 0,
+                            ),
+                        // labelText: "", //label,
+                        isDense: true,
+                        labelStyle: labelStyle ??
+                            GoogleFonts.hankenGrotesk(
+                              fontSize: 16.sp,
+                              height: 1.43,
+                              color: Pallet.white,
+                            ),
+                        prefixIcon: prefixIcon != null
+                            ? IconButton(
+                                onPressed: onPasswordToggle,
+                                icon: Icon(
+                                  prefixIcon,
+                                  color:
+                                      iconColor ?? Pallet.grey.withOpacity(0.7),
+                                ))
+                            : null,
+                        suffixIcon: suffixIcon != null
+                            ? IconButton(
+                                onPressed: onPasswordToggle,
+                                icon: Icon(
+                                  suffixIcon,
+                                  color:
+                                      iconColor ?? Pallet.grey.withOpacity(0.7),
+                                ))
+                            : suffixWidget,
+                      ),
                 ),
               ),
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
+}
 
+class PhoneNumberField extends StatelessWidget {
+  PhoneNumberField({
+    this.label = '',
+    this.hint,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.suffixWidget,
+    this.prefixWidget,
+    this.onSaved,
+    this.onChanged,
+    this.validator,
+    this.autoValidateMode = AutovalidateMode.onUserInteraction,
+    this.controller,
+    this.onPasswordToggle,
+    this.onTapInfo,
+    this.initialValue = "GH",
+    this.autoValidate = false,
+    this.autocorrect = true,
+    this.readOnly = false,
+    this.ignore = false,
+    this.shakeKey,
+    this.isborderDecoration = true,
+    this.onTapped,
+    this.maxLength,
+    this.inputFormatters,
+    this.focusedColorBorder = Colors.white,
+    this.labelStyle,
+    this.hintStyle,
+    this.textStyle,
+    this.decoration,
+    this.iconColor,
+    this.textCapitalization = TextCapitalization.none,
+    this.key,
+    this.showInfo = false,
+    this.focusNode,
+    this.floatingLabelBehavior = FloatingLabelBehavior.never,
+  });
+
+  TextCapitalization textCapitalization;
+  String label;
+  String? hint;
+  IconData? prefixIcon;
+  IconData? suffixIcon;
+  Color? iconColor;
+
+  Widget? prefixWidget;
+  Widget? suffixWidget;
+
+  final FormFieldSetter<String>? onSaved;
+  final Function(PhoneNumber)? onChanged;
+  final FormFieldValidator<String>? validator;
+  VoidCallback? onPasswordToggle;
+  final AutovalidateMode? autoValidateMode;
+
+  String initialValue;
+  TextEditingController? controller;
+  FocusNode? focusNode;
+
+  bool autocorrect;
+  bool autoValidate;
+  bool readOnly;
+  bool showInfo;
+  bool ignore;
+  bool isborderDecoration;
+
+  // bool clickable;
+  Function()? onTapped;
+
+  // bool clickable;
+  Function()? onTapInfo;
+
+  int? maxLength;
+  var inputFormatters;
+  Color focusedColorBorder;
+  final TextStyle? labelStyle;
+  final TextStyle? hintStyle;
+  final TextStyle? textStyle;
+  InputDecoration? decoration;
+  FloatingLabelBehavior floatingLabelBehavior;
+  Key? key;
+  final shakeKey;
+
+  @override
+  Widget build(BuildContext context) {
+    focusedColorBorder = Theme.of(context).brightness == Brightness.dark
+        ? Pallet.white
+        : Pallet.grey;
+    return InkWell(
+      onTap: onTapped,
+      child: IgnorePointer(
+        ignoring: ignore,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (label.isNotEmpty)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextView(
+                    text: label,
+                    textAlign: TextAlign.center,
+                    textStyle: GoogleFonts.hankenGrotesk(
+                      fontSize: 14.sp,
+                      color: Pallet.textColorLight,
+                      height: 1.43,
+                    ),
+                  ),
+                  if (showInfo)
+                    GestureDetector(
+                      onTap: onTapInfo,
+                      child: Icon(Icons.info_outline, size: 16.w),
+                    ),
+                ],
+              ),
+            if (label.isNotEmpty)
+              SizedBox(
+                height: 8.h,
+              ),
+            Theme(
+              data: Theme.of(context).copyWith(splashColor: Colors.transparent),
+              child: Container(
+                decoration: ShapeDecoration(
+                  color: Pallet.lightGrayAccent.withOpacity(0.3),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                ),
+                child: IntlPhoneField(
+                  key: key,
+                  readOnly: readOnly,
+                  initialCountryCode: initialValue,
+                  onChanged: onChanged,
+                  style: textStyle ??
+                      GoogleFonts.hankenGrotesk(
+                        color: Pallet.gray,
+                        fontSize: 16.sp,
+                        height: 1.57,
+                      ),
+                  controller: controller,
+                  autovalidateMode: autoValidateMode,
+                  decoration: decoration ??
+                      InputDecoration(
+                        counterText: '',
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: 24.w, vertical: 16.h),
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        errorBorder: const OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                        // floatingLabelBehavior: FloatingLabelBehavior.always,
+                        hintText: hint,
+                        hintStyle: hintStyle ??
+                            GoogleFonts.hankenGrotesk(
+                              color: Pallet.grayAccent,
+                              fontSize: 16.sp,
+                              height: 0,
+                            ),
+                        // labelText: "", //label,
+                        isDense: true,
+                        labelStyle: labelStyle ??
+                            GoogleFonts.hankenGrotesk(
+                              fontSize: 16.sp,
+                              height: 1.43,
+                              color: Pallet.white,
+                            ),
+                        prefixIcon: prefixIcon != null
+                            ? IconButton(
+                                onPressed: onPasswordToggle,
+                                icon: Icon(
+                                  prefixIcon,
+                                  color:
+                                      iconColor ?? Pallet.grey.withOpacity(0.7),
+                                ))
+                            : null,
+                        suffixIcon: suffixIcon != null
+                            ? IconButton(
+                                onPressed: onPasswordToggle,
+                                icon: Icon(
+                                  suffixIcon,
+                                  color:
+                                      iconColor ?? Pallet.grey.withOpacity(0.7),
+                                ))
+                            : suffixWidget,
+                      ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

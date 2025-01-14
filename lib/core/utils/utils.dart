@@ -1,7 +1,12 @@
-import 'dart:io';
+import 'dart:developer';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 int daysBetween(DateTime from, DateTime to) {
   from = DateTime(from.year, from.month, from.day);
@@ -10,22 +15,93 @@ int daysBetween(DateTime from, DateTime to) {
 }
 
 int secondsBetween(DateTime from, DateTime to) {
-  from = DateTime(from.year, from.month, from.day, from.hour, from.minute, from.second);
+  from = DateTime(
+      from.year, from.month, from.day, from.hour, from.minute, from.second);
   to = DateTime(to.year, to.month, to.day, to.hour, to.minute, to.second);
   return (to.difference(from).inSeconds).round();
 }
 
-String formatMoney(dynamic amount, {int? decimalDigits, String name = "NGN"}) {
+void launchURL(Uri url) async {
+  try {
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  } catch (e) {
+    log(e.toString());
+  }
+}
+
+String maskValue(String value) {
+  if (value.length < 12) {
+    return value; // Return as-is if the number is too short
+  }
+  int visibleDigits = 6; // Number of visible digits at the start and end
+  String start = value.substring(0, visibleDigits);
+  String end = value.substring(value.length - visibleDigits);
+  String masked = '*' * (value.length - visibleDigits * 2);
+  return '$start$masked$end';
+}
+
+String formatMoney(dynamic amount, {int? decimalDigits, String name = "₵"}) {
   return NumberFormat.simpleCurrency(
-          locale: Platform.localeName, name: name, decimalDigits: decimalDigits)
+          locale: 'en',
+          name: name == "GHS" ? "₵" : name,
+          decimalDigits: decimalDigits)
       .format(amount);
 }
 
-num convertStringAmountToNum(String amount){
+num formatStringAmount(String amount) {
+  if (amount.isEmpty) return 0;
   return num.parse(amount.replaceAll(",", ""));
 }
 
+String formatNumber(int number) {
+  if (number >= 1000000) {
+    return '${(number / 1000000).toStringAsFixed(0)}M';
+  } else if (number >= 1000) {
+    return '${(number / 1000).toStringAsFixed(0)}k';
+  } else {
+    return number.toString();
+  }
+}
+
+String formNum(String inputString) {
+  if (inputString.isEmpty) {
+    return inputString;
+  }
+  String text1 = inputString;
+  if (text1.split(".").length > 2) {
+    text1 = customReplace(text1, ".", 2, "");
+    return text1;
+  } else if (text1.split(".").length == 2) {
+    num n1 = num.parse(text1.split(".").first.replaceAll(",", ""));
+    String decimalPlace = text1.split(".").skip(1).first;
+    if (decimalPlace.split("").length > 2) {
+      decimalPlace = decimalPlace.split("").elementAt(0) +
+          decimalPlace.split("").elementAt(1);
+    }
+    String text2 =
+        NumberFormat.decimalPattern().format(n1) + "." + decimalPlace;
+    return text2;
+  }
+  String text3 = inputString.replaceAll(',', '');
+  text1 = text3;
+  return NumberFormat.decimalPattern().format(
+    num.parse(text1),
+  );
+}
+
+String customReplace(
+    String text, String searchText, int replaceOn, String replaceText) {
+  String data = text.split(".").first + "." + text.split(".").skip(1).first;
+  return data;
+}
+
 String formatDate(String date, {String? format, Duration? duration}) {
+  DateTime dateTime = DateTime.parse(date);
+  date = dateTime.toIso8601String();
   if (!date.contains("-")) {
     return formatDate(
         DateTime.fromMillisecondsSinceEpoch(int.parse(date)).toIso8601String());
@@ -40,77 +116,23 @@ String formatDate(String date, {String? format, Duration? duration}) {
   }
 }
 
-String formatStringDate(String date) {
-  String day = date.split("-").first;
-  String month = date.split("-").skip(1).first;
-  String year = date.split("-").skip(2).first;
-
-  if (day.split("").length == 4) return date.split("T").first;
-
-  return "${getYear(int.parse(year))}-${getMonth(month)}-$day";
+copyText(BuildContext context, String text) async {
+  await Clipboard.setData(ClipboardData(text: text));
+  showToast("Copied!!!");
 }
 
-String formatOnlyDate(DateTime date) {
-  int day = date.day;
-  int month = date.month;
-  int year = date.year;
-
-  return "$day/$month/$year";
-}
-
-String formatOnlyTime(TimeOfDay time) {
-  int hour = time.hour;
-  int minute = time.minute;
-  String period = time.period.name;
-
-  return "$hour:$minute $period";
-}
-
-String getMonth(String month) {
-  switch (month.toLowerCase()) {
-    case "dec":
-      return "12";
-    case "nov":
-      return "11";
-    case "oct":
-      return "10";
-    case "sep":
-      return "9";
-    case "aug":
-      return "8";
-    case "jul":
-      return "7";
-    case "jun":
-      return "6";
-    case "may":
-      return "5";
-    case "apr":
-      return "4";
-    case "mar":
-      return "3";
-    case "feb":
-      return "2";
-    case "jan":
-      return "1";
-    default:
-      return month;
-  }
-}
-
-int getYear(int year) {
-  if (year > 23 && year < 1000) {
-    return year + 1900;
-  } else if (year < 23 && year < 1000) {
-    return year + 2000;
-  } else {
-    return year;
-  }
+showToast(String message) {
+  Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      fontSize: 16.sp);
 }
 
 String getFirstName(String name) {
   if (name.split(" ").isNotEmpty) {
     String text = name.split(" ").first;
-    print("Last name: $text");
     return text;
   }
   return "";
@@ -119,7 +141,6 @@ String getFirstName(String name) {
 String getLastName(String name) {
   if (name.split(" ").skip(1).isNotEmpty) {
     String text = name.split(" ").skip(1).first;
-    print("First name: $text");
     return text;
   }
   return "";
@@ -128,39 +149,7 @@ String getLastName(String name) {
 String getMiddleName(String name) {
   if (name.split(" ").skip(2).isNotEmpty) {
     String text = name.split(" ").skip(2).first;
-    print("Middle name: $text");
     return text;
   }
   return "";
-}
-
-String customReplace(
-    String text, String searchText, int replaceOn, String replaceText) {
-  String data = text.split(".").first + "." + text.split(".").skip(1).first;
-  return data;
-}
-
-
-String formatCardnumber(String input) {
-  input = input.replaceAll(RegExp(r'\s'), ''); // Remove existing spaces
-  RegExp fourDigits = RegExp(r".{1,4}");
-  Iterable<RegExpMatch> matches = fourDigits.allMatches(input);
-  List<String> groups = matches.map((match) => match.group(0)!).toList();
-  String formattedString = groups.join(' ');
-  return formattedString;
-}
-
-String formatExpirydate(String input) {
-  input =
-      input.replaceAll(RegExp(r'[^0-9]'), ''); // Remove non-numeric characters
-  List<String> chunks = [];
-  for (int i = 0; i < input.length; i += 2) {
-    int end = i + 2;
-    if (end > input.length) {
-      end = input.length;
-    }
-    chunks.add(input.substring(i, end));
-  }
-  String formattedString = chunks.join('/');
-  return formattedString;
 }

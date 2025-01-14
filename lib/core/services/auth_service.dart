@@ -1,10 +1,7 @@
-import 'dart:developer';
-
 import 'package:sb_payment_sdk/core/network/network_service.dart';
 import 'package:sb_payment_sdk/core/network/url_config.dart';
 import 'package:sb_payment_sdk/models/api_response.dart';
 import 'package:sb_payment_sdk/models/charge_model.dart';
-import 'package:sb_payment_sdk/sb_payment_sdk.dart';
 
 class AuthService {
   NetworkService _networkService;
@@ -17,13 +14,14 @@ class AuthService {
   Future<APIResponse> initTransfer({required Payment payment}) async {
     try {
       var data = {
-        "amount": (payment.amount * 100).ceil(),
+        "amount": payment.amount,
         "currency": payment.currencyType?.name ?? CurrencyType.NGN,
         "email": payment.email,
         "reference": payment.reference
       };
       final response = await _networkService.call(
-          UrlConfig.coreBaseUrl + UrlConfig.initTransfer, RequestMethod.post, data: data);
+          UrlConfig.coreBaseUrl + UrlConfig.initTransfer, RequestMethod.post,
+          data: data);
       return APIResponse.fromJson(response.data);
     } catch (e) {
       rethrow;
@@ -33,13 +31,54 @@ class AuthService {
   Future<APIResponse> initPaystack({required Payment payment}) async {
     try {
       var data = {
-        "amount": (payment.amount * 100).ceil(),
+        "amount": payment.amount,
         "currency": payment.currencyType?.name ?? CurrencyType.NGN,
         "email": payment.email,
-        "partner": "Paystack"
+        "paymentMethods": payment.paymentMethods,
+        "partner": "Paystack",
+        "redirectUrl": "https://sb.payment.com/success",
       };
       final response = await _networkService.call(
-          UrlConfig.coreBaseUrl + UrlConfig.initPaystackPayment, RequestMethod.post, data: data);
+          UrlConfig.coreBaseUrl + UrlConfig.initPaystackPayment,
+          RequestMethod.post,
+          data: data);
+      return APIResponse.fromJson(response.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<APIResponse> initMomoPayment({required Payment payment}) async {
+    try {
+      var data = {
+        "amount": payment.amount,
+        "currency": payment.currencyType?.name ?? CurrencyType.NGN,
+        "email": payment.email,
+        "provider": payment.provider,
+        "phone": payment.phoneNumber
+      };
+      final response = await _networkService.call(
+          UrlConfig.coreBaseUrl + UrlConfig.initMomoPayment, RequestMethod.post,
+          data: data);
+      return APIResponse.fromJson(response.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<APIResponse> verifyMomoOTP(
+      {required String customerName,
+      required String reference,
+      required String otp}) async {
+    try {
+      var data = {
+        "reference": reference,
+        "customerName": customerName,
+        "otp": otp,
+      };
+      final response = await _networkService.call(
+          UrlConfig.coreBaseUrl + UrlConfig.verifyMomoOTP, RequestMethod.post,
+          data: data);
       return APIResponse.fromJson(response.data);
     } catch (e) {
       rethrow;
@@ -49,7 +88,9 @@ class AuthService {
   Future<APIResponse> manualVerification({required String paymentCode}) async {
     try {
       final response = await _networkService.call(
-          "${UrlConfig.coreBaseUrl}${UrlConfig.manualVerify}/$paymentCode", RequestMethod.post, data: {});
+          "${UrlConfig.coreBaseUrl}${UrlConfig.manualVerify}/$paymentCode",
+          RequestMethod.post,
+          data: {});
       return APIResponse.fromJson(response.data);
     } catch (e) {
       rethrow;
@@ -59,11 +100,39 @@ class AuthService {
   Future<APIResponse> decodePaystackToken({required String token}) async {
     try {
       final response = await _networkService.call(
-          "${UrlConfig.coreBaseUrl}${UrlConfig.decodePaystackPaymentDetails}/$token", RequestMethod.get);
+          "${UrlConfig.coreBaseUrl}${UrlConfig.decodePaystackPaymentDetails}/$token",
+          RequestMethod.get);
       return APIResponse.fromJson(response.data);
     } catch (e) {
       rethrow;
     }
   }
 
+  Future<APIResponse> getTaxBreakdown(
+      {required String merchantId,
+      required String currency,
+      required String transactionType,
+      required num amount}) async {
+    try {
+      final response = await _networkService.call(
+          "${UrlConfig.coreBaseUrl}${UrlConfig.getTaxBreakDown(merchantId: merchantId, currency: currency, transactionType: transactionType, amount: amount)}",
+          RequestMethod.get);
+      return APIResponse.fromJson(response.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<APIResponse> getServiceProviders({
+    required String transactionCode,
+  }) async {
+    try {
+      final response = await _networkService.call(
+          "${UrlConfig.coreBaseUrl}${UrlConfig.serviceProvider(transactionCode)}",
+          RequestMethod.get);
+      return APIResponse.fromJson(response.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

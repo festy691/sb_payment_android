@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
@@ -21,8 +20,7 @@ class ApiError {
   /// sets value of class properties from [error]
   void _handleError(Object error) {
     if (error is DioError) {
-      DioError dioError = error; // as DioError;
-
+      DioError dioError = error;
       switch (dioError.type) {
         case DioErrorType.cancel:
           errorDescription = "Request to API server was cancelled";
@@ -33,14 +31,14 @@ class ApiError {
           break;
         case DioErrorType.other:
           errorDescription =
-              'Something went wrong while processing your request';
+              'Something went wrong while processing your request, ${dioError.message}';
           break;
         case DioErrorType.receiveTimeout:
           errorDescription =
               "Ouch! Seems like you’re offline. Please check your internet connection and try again";
           break;
         case DioErrorType.response:
-          errorType = dioError.response?.statusCode;
+          this.errorType = dioError.response?.statusCode;
           if (dioError.response?.statusCode == 401) {
             if (dioError.response != null && dioError.response!.data != null) {
               if (!dioError.response!.data.toString().startsWith("{") ||
@@ -48,7 +46,30 @@ class ApiError {
                 var data = {
                   "error": true,
                   "data": null,
-                  "message": "Failed to process request"
+                  "message": "Request failed, Permission denied!!!"
+                };
+                dioError.response!.data = data;
+              }
+            } else {
+              var data = {
+                "error": true,
+                "data": null,
+                "message": "Request failed, Permission denied!!!"
+              };
+              dioError.response!.data = data;
+            }
+            this.apiErrorModel = APIResponse.fromJson(dioError.response?.data);
+            this.errorDescription =
+                extractDescriptionFromResponse(error.response);
+          } else if (dioError.response?.statusCode == 400) {
+            if (dioError.response != null && dioError.response!.data != null) {
+              if (!dioError.response!.data.toString().startsWith("{") ||
+                  !dioError.response!.data.toString().endsWith("}")) {
+                var data = {
+                  "error": true,
+                  "data": null,
+                  "message":
+                      "Request failed, the server responded with a 400 error!!!"
                 };
                 dioError.response!.data = data;
               }
@@ -57,20 +78,21 @@ class ApiError {
                 "error": true,
                 "data": null,
                 "message":
-                    "Your session has timed out, please login again to proceed"
+                    "Request failed, the server responded with a 400 error!!!"
               };
               dioError.response!.data = data;
             }
-            apiErrorModel = APIResponse.fromJson(dioError.response?.data);
-            errorDescription = extractDescriptionFromResponse(error.response);
-          } else if (dioError.response?.statusCode == 400) {
+            this.apiErrorModel = APIResponse.fromJson(dioError.response?.data);
+            this.errorDescription =
+                extractDescriptionFromResponse(error.response);
+          } else if (dioError.response?.statusCode == 403) {
             if (dioError.response != null && dioError.response!.data != null) {
               if (!dioError.response!.data.toString().startsWith("{") ||
                   !dioError.response!.data.toString().endsWith("}")) {
                 var data = {
                   "error": true,
                   "data": null,
-                  "message": "Failed to process request"
+                  "message": "Request failed, access denied"
                 };
                 dioError.response!.data = data;
               }
@@ -78,12 +100,13 @@ class ApiError {
               var data = {
                 "error": true,
                 "data": null,
-                "message": "Something went wrong while processing your request"
+                "message": "Request failed, access denied"
               };
               dioError.response!.data = data;
             }
-            apiErrorModel = APIResponse.fromJson(dioError.response?.data);
-            errorDescription = extractDescriptionFromResponse(error.response);
+            this.apiErrorModel = APIResponse.fromJson(dioError.response?.data);
+            this.errorDescription =
+                extractDescriptionFromResponse(error.response);
           } else if (dioError.response?.statusCode == 404) {
             if (dioError.response != null && dioError.response!.data != null) {
               if (!dioError.response!.data.toString().startsWith("{") ||
@@ -91,7 +114,8 @@ class ApiError {
                 var data = {
                   "error": true,
                   "data": null,
-                  "message": "Failed to process request"
+                  "message":
+                      "Failed to process request, the resources you are looking for was not found!!!"
                 };
                 dioError.response!.data = data;
               }
@@ -99,12 +123,14 @@ class ApiError {
               var data = {
                 "error": true,
                 "data": null,
-                "message": "404 item not found"
+                "message":
+                    "Failed to process request, the resources you are looking for was not found!!!"
               };
               dioError.response!.data = data;
             }
-            apiErrorModel = APIResponse.fromJson(dioError.response?.data);
-            errorDescription = extractDescriptionFromResponse(error.response);
+            this.apiErrorModel = APIResponse.fromJson(dioError.response?.data);
+            this.errorDescription =
+                extractDescriptionFromResponse(error.response);
           } else if (dioError.response?.statusCode == 500) {
             if (dioError.response != null && dioError.response!.data != null) {
               if (!dioError.response!.data.toString().startsWith("{") ||
@@ -113,7 +139,7 @@ class ApiError {
                   "error": true,
                   "data": null,
                   "message":
-                      "Something went wrong while processing your request"
+                      "Request failed, the server responded with a 500 error!!!"
                 };
                 dioError.response!.data = data;
               }
@@ -121,27 +147,49 @@ class ApiError {
               var data = {
                 "error": true,
                 "data": null,
-                "message": "omething went wrong while processing your request"
+                "message":
+                    "Request failed, the server responded with a 500 error!!!"
               };
               dioError.response!.data = data;
             }
-            apiErrorModel = APIResponse.fromJson(dioError.response?.data);
-            errorDescription = extractDescriptionFromResponse(error.response);
+            this.apiErrorModel = APIResponse.fromJson(dioError.response?.data);
+            this.errorDescription =
+                extractDescriptionFromResponse(error.response);
           } else if (dioError.response?.statusCode == 502) {
-            errorDescription =
+            this.errorDescription =
                 'Internal server error. We are fixing it right away';
           } else {
-            errorDescription =
-                "Oops! we could'nt make connections, please try again";
+            if (dioError.response != null && dioError.response!.data != null) {
+              if (!dioError.response!.data.toString().startsWith("{") ||
+                  !dioError.response!.data.toString().endsWith("}")) {
+                var data = {
+                  "error": true,
+                  "data": null,
+                  "message":
+                      "Failed to process request, the request failed with status code ${dioError.response?.statusCode}!!!"
+                };
+                dioError.response!.data = data;
+              }
+            } else {
+              var data = {
+                "error": true,
+                "data": null,
+                "message":
+                    "Failed to process request, the request failed with status code ${dioError.response?.statusCode}!!!"
+              };
+              dioError.response!.data = data;
+            }
+            this.apiErrorModel = APIResponse.fromJson(dioError.response?.data);
+            this.errorDescription =
+                extractDescriptionFromResponse(error.response);
           }
           break;
         case DioErrorType.sendTimeout:
-          errorDescription =
-              "Ouch! Seems like you’re offline. Please check your internet connection and try again";
+          errorDescription = "Connection failed, the request has timed out!!!";
           break;
       }
     } else {
-      errorDescription = "Oops an error occurred, we are fixing it";
+      errorDescription = "Oops an error occurred, ${error.toString()}";
     }
   }
 
@@ -153,7 +201,7 @@ class ApiError {
       } else {
         message = response?.statusMessage ?? '';
       }
-    } catch (error) {
+    } catch (error, stackTrace) {
       message = response?.statusMessage ?? error.toString();
     }
     return message;

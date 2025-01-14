@@ -1,24 +1,27 @@
 class TransferDetailModel {
-  final accountNumber;
-  final reference;
-  final expiryTime;
-  final bankName;
-  final accountName;
+  String? accountNumber;
+  String? reference;
+  String? expiryTime;
+  String? bankName;
+  String? accountName;
+  String? shortCode;
 
   TransferDetailModel(
       {this.accountNumber,
       this.reference,
       this.expiryTime,
       this.bankName,
+      this.shortCode,
       this.accountName});
 
-  factory TransferDetailModel.fromJson(Map<String, dynamic> data){
+  factory TransferDetailModel.fromJson(Map<String, dynamic> data) {
     return TransferDetailModel(
-        accountNumber: data["accountNumber"],
-        reference: data["reference"],
-        expiryTime: data["expiryTime"],
-        bankName: data["bankName"],
-        accountName: data["accountName"],
+      accountNumber: (data["accountNumber"] ?? "").toString(),
+      reference: data["reference"],
+      expiryTime: data["expiryTime"],
+      bankName: data["bankName"],
+      accountName: data["accountName"],
+      shortCode: data["shortCode"],
     );
   }
 }

@@ -1,1 +1,0 @@
-enum UserType {user, agent, nonUser}

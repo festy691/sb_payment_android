@@ -4,6 +4,7 @@ import 'package:sb_payment_sdk/core/network/network_service.dart';
 import 'package:sb_payment_sdk/core/network/url_config.dart';
 import 'package:sb_payment_sdk/core/provider/auth_provider.dart';
 import 'package:sb_payment_sdk/core/provider/payment_provider.dart';
+import 'package:sb_payment_sdk/core/provider/result_provider.dart';
 import 'package:sb_payment_sdk/core/services/auth_service.dart';
 
 final sl = GetIt.instance;
@@ -47,5 +48,6 @@ Future<void> initServices() async {
   if (sl.isRegistered<AuthService>()) {
     sl.unregister<AuthService>();
   }
-  sl.registerLazySingleton<AuthService>(() => AuthService(networkService: sl()));
+  sl.registerLazySingleton<AuthService>(
+      () => AuthService(networkService: sl()));
 }

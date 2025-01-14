@@ -1,103 +1,103 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 class Pallet {
   Pallet._();
-  // LIGHT COLOURS
+  // IM-SMART COLORS
+  static const Color lightCream = Color(0xFFFBF5EF);
+  static const Color bgColor = Color(0xFFF5F8FF);
+  static const Color cream = Color(0xFFF9F1EF);
+  static const Color darkCream = Color(0xFFFBF5EF);
+  static const Color lightPrimaryColor = Color(0xFFF6C182);
+  static const Color primaryColor = Color(0xFFB77930);
+  static const Color gold = Color(0xFFDFC335);
+  static const Color lightGray = Color(0xFF9A9A9A);
+  static const Color gray = Color(0xFF606067);
+  static const Color darkGray = Color(0xFF59595A);
+  static const Color lightGrayAccent = Color(0xFFDFDEDE);
+  static const Color grayAccent = Color(0xFF999999);
+  static const Color semiDarkGrayAccent = Color(0xFF878787);
+  static const Color darkGrayAccent = Color(0xFF606067);
+  static const Color white = Color(0xFFFFFFFF);
+  static const Color transparentBlack = Color(0xFF393939);
+  static const Color transparentBlue = Color(0x7C055299);
+  static const Color deepBlue = Color(0xFF041C28);
+  static const Color semiDeepBlue = Color(0xFF051A25);
+  static const Color black = Color(0xFF140D05);
+  static const Color dark = Color(0xFF222222);
+  static const Color titleTextLight = Color(0xFF353D47);
 
-  static const Color scaffoldBackgroundLight = Colors.white;
-  static const primary = MaterialColor(0xFF039855, _primaryColor);
-  static const secondary = MaterialColor(0xFF0A3982, _secondaryColor);
-  static const grey = MaterialColor(0xFF5F5F5F, _greyColor);
-  static const warning = MaterialColor(0xFFCAB166, _warningColor);
-  static const accent = MaterialColor(0xFF0E6296, _accentColor);
-  static const error = MaterialColor(0xFFDC0000, _errorColor);
-  static const success = MaterialColor(0xFF009262, _successColor);
-  static const black = Color(0xFF212121);
-  static const white = Colors.white;
-  static const orange = Color(0xFFF79009);
-  static const orangeDark = Color(0xFFE34802);
-  static const Color backgroundLight = Colors.white;
-  static Color? dividerColor = const Color(0xFFF2F4F7);
+  // LIGHT COLOURS
+  static const Color scaffoldBackgroundLight = Color(0xFFF2F6FB);
+  static const Color backgroundLight = Color(0xFFEEF2F7);
+  static Color? dividerColorLight = Colors.grey[350];
+  static const Color cardColorLight = Colors.white;
+  static const Color disabledColor = Colors.grey;
+  static const Color iconColorLight = Color(0xFF333334);
+  static const Color iconTint = Color(0xFF959DB6);
+  static const Color hintColorLight = Color(0xFF535C5F);
+  static const Color highlightColorLight = Color(0x83075483);
+  static const Color textColorLight = Color(0xFF03071E);
 
   // DARK COLOURS
-  static const Color scaffoldBackgroundDark = Color(0xFF010A18);
-  static const Color backgroundDark = Color(0xFF212121); //Colors.black;
+  static const Color scaffoldBackgroundDark = Color(0xFF121212);
+  static const Color backgroundDark = Color(0xFF121212); //Colors.black;
+  static const Color backgroundBlack = Colors.black;
+  static Color? dividerColorDark = Colors.grey[100];
+  static Color? cardColorDark = Colors.grey[900];
+  static const Color disabledColorDark = Colors.grey;
+  static const Color iconColorDark = Color(0xFFABABAB);
+  static const Color iconTintDark = Color(0xFF959DB6);
+  static const Color hintColorDark = Color(0xFF8E8E93);
+  static const Color highlightColorDark = Color(0x83075483);
+  static const Color textColorDark = Colors.white;
 
-  //GLOBAL COLORS
-  Color scaffoldBackground = scaffoldBackgroundLight;
+  // static const Color textColorDark = Color(0xFFF9A033);
+  static const Color cardDarkGrey = const Color(0xFF2F3462);
+  static const Color blueToolTip = Color(0xFF0A1480);
+
+  // MISC
+  static const Color primaryLight = Color(0xFF0FA8AF);
+  static const Color primaryDark = Color(0xFF6E21D1);
+  static const Color colorPrimary = Color(0xFF0F6EFF);
+  static const Color colorPrimaryLight = Color(0xFF075483);
+  static const Color colorPrimaryDark = Color(0xFF075483);
+  static const Color colorSecondaryLight = Color(0xFF6418C3);
+  static const Color colorSecondaryDark = Color(0xFF3D1273);
+  static const Color colorNavigationActive = Color(0xFFA365F4);
+  static const Color inActiveButtonColor = Color(0x141E1F20);
+  static const Color accentColor = Color(0xFF009FD4);
+  static const Color notificationDotColor = Color(0xFF0F6EFF);
+  static const Color blue = Color(0xFF266DD3);
+  static const Color blueLight = Color(0xFF00F0FF);
+  static const Color blueAccent = Color(0xFF00A7FF);
+  static const Color blueDark = Color(0xFF2EBEF3);
+  static const Color blueAccentDark = Color(0xFF00A7FF);
+  static const Color green = Color(0xFF04AB69);
+  static const Color mainOrange = Color(0xFFFFB731);
+  static const Color lightBlue = Color(0xFF88BBEC);
+  static const Color activeCardColor = Color(0xFFEDF2F6);
+  static const Color inactiveCardColor = Color(0xFFE9E9E9);
+  static const Color bottomNavColor = Color(0xFFF7FAFD);
+  static const Color backgroundColor = Color(0xFFE5E5E5);
+  static const Color red = Color(0xFFE0323F);
+  static const Color buttonColor = Color(0xFFE34802);
+  static const Color blackColor = Colors.black;
+  static const Color whiteColor = Colors.white;
+
+  static const Color grey = Color(0xFF5B667A);
+  static const Color greyAccent = Color(0xFFFDF7F7);
+  static const Color lightGrey = Color(0xFFE2E2E2);
+  static const Color hintColor = Color(0xFFBAC3D2);
+  static const Color taxWidgetColor = Color(0xFFEAECF0);
+  static Color transparent = Colors.black.withOpacity(0.0);
+  static const Color cardTopColor = Color(0xFFD1E7FC);
+  static const Color cardBottomColor = Color(0xFFFFEAEB);
+
   static String getRandomColor() => Color.fromARGB(255, Random().nextInt(255),
           Random().nextInt(255), Random().nextInt(255))
       .value
       .toRadixString(16);
 }
-
-const Map<int, Color> _primaryColor = {
-  50: Color(0xFFEEF4EB),
-  100: Color(0xFFCADEC1),
-  200: Color(0xFF039855),
-  300: Color(0xFF44772D),
-  400: Color(0xFF039754),
-  500: Color(0xFF1E3414),
-  600: Color(0xFF335922),
-  700: Color(0xff09663C),
-};
-const Map<int, Color> _secondaryColor = {
-  50: Color(0xFFE7EDF6),
-  100: Color(0xFFB4C6E2),
-  200: Color(0xFF0C47A3),
-  300: Color(0xFF0A3982),
-  400: Color(0xFF072B62),
-  500: Color(0xFF041939),
-  600: Color(0xFF212121),
-  700: Color(0xFF082E68),
-};
-const Map<int, Color> _accentColor = {
-  50: Color(0xFFE7F2F8),
-  100: Color(0xFFB6D6EA),
-  200: Color(0xFF127ABC),
-  300: Color(0xFF0E6296),
-  400: Color(0xFF0B4971),
-  500: Color(0xFF062B42),
-  600: Color(0xFF667085),
-};
-const Map<int, Color> _successColor = {
-  50: Color(0xFFF1FAF7),
-  100: Color(0xFF84DFC1),
-  200: Color(0xFF32C997),
-  300: Color(0xFF009262),
-  400: Color(0xFF1B6E53),
-  500: Color(0xFF105B42),
-  600: Color(0xFF039855),
-};
-const Map<int, Color> _warningColor = {
-  50: Color(0xFFFFFCF2),
-  100: Color(0xFFF3F4D8),
-  200: Color(0xFFFDDD80),
-  300: Color(0xFFCAB166),
-  400: Color(0xFF98854D),
-  500: Color(0xFF594D2D),
-  600:Color(0xFFFBFFFA),
-  700: Color(0xfFABBED1)
-
-};
-const Map<int, Color> _errorColor = {
-  50: Color(0xFFFCE6E6),
-  100: Color(0xFFF4B0B0),
-  200: Color(0xFFDC0000),
-  300: Color(0xFFB00000),
-  400: Color(0xFF840000),
-  500: Color(0xFF4D0000),
-};
-const Map<int, Color> _greyColor = {
-  50: Color(0xFFEFEFEF),
-  100: Color(0xFFCDCDCD),
-  200: Color(0xFF5F5F5F),
-  300: Color(0xFF4C4C4C),
-  400: Color(0xFF393939),
-  500: Color(0xFFF7F7F7),
-  600: Color(0xFFA7A7A7),
-  700: Color(0xFFA4A4A4),
-  800: Color(0xFF7F7F7F),
-  900: Color(0xFFF5F4F7),
-};

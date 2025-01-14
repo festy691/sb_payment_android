@@ -7,6 +7,7 @@ double getHeight(context) => MediaQuery.of(context).size.height;
 double setSp(num value) => ScreenUtil().setSp(value);
 double setWidth(num value) => ScreenUtil().setWidth(value);
 double setHeight(num value) => ScreenUtil().setHeight(value);
+String whatsAppPhoneNumber = '+2349127703006';
 
 final GetIt getIt = GetIt.instance;
 
@@ -20,8 +21,6 @@ String naira = "₦";
 
 BuildContext? globalContext;
 
-int currentTheme = 1;
-
 class AppRegex {
   static RegExp onlyNumbers = RegExp(r'\d+');
   static RegExp onlyUppercase = RegExp(r'[A-Z]');
@@ -29,146 +28,180 @@ class AppRegex {
   static RegExp onlySpecialCharacter = RegExp(r'[^\w\s]');
 }
 
-const privacyPolicy = """
-<p class="sample" style="color: red; text-align: center;"><span style=" color: rgb(0, 0, 0); font-size: 32px; font-weight:600">Privacy Policy</span></p>
-<p style="line-height: 1.5;text-align: center;"><span style="color: rgb(65, 168, 95); font-family: Georgia, serif; font-size: 18px;">Updated as of 01/20/2024</span></p>
-<p style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">SpaceVilla Africa is committed to protecting the privacy of our users. This Privacy Policy outlines the types of personal information we collect, how we use it, and the measures we take to ensure its security.</span></p>
-<p><br></p>
-<p><br></p>
-<p><span style="font-family: Georgia, serif;"><br></span></p>
-<p><span style="font-family: Georgia, serif;"><strong><span style="font-size: 24px;">What information do we collect?</span></strong></span></p>
-<p style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">Personal Information:</span></p>
+class Strings {
+  static const String appName = 'Payment Card Demo';
+  static const String fieldReq = 'This field is required';
+  static const String numberIsInvalid = 'Card is invalid';
+  static const String pay = 'Validate';
+}
+
+String privacyPolicy = '''
+<h1>Privacy Policy</h1>
+<p>Last updated: December 27, 2023</p>
+<p>This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.</p>
+<p>We use Your Personal data to provide and improve the Service. By using the Service, You agree to the collection and use of information in accordance with this Privacy Policy.</p>
+<h2>Interpretation and Definitions</h2>
+<h3>Interpretation</h3>
+<p>The words of which the initial letter is capitalized have meanings defined under the following conditions. The following definitions shall have the same meaning regardless of whether they appear in singular or in plural.</p>
+<h3>Definitions</h3>
+<p>For the purposes of this Privacy Policy:</p>
 <ul>
-    <li style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">Full name</span></li>
-    <li style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">Contact information (email address, phone number)</span></li>
-    <li style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">Address</span></li>
-    <li style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">Government-issued identification details</span></li>
+<li>
+<p><strong>Account</strong> means a unique account created for You to access our Service or parts of our Service.</p>
+</li>
+<li>
+<p><strong>Affiliate</strong> means an entity that controls, is controlled by or is under common control with a party, where &quot;control&quot; means ownership of 50% or more of the shares, equity interest or other securities entitled to vote for election of directors or other managing authority.</p>
+</li>
+<li>
+<p><strong>Application</strong> refers to IM Smart Luxury, the software program provided by the Company.</p>
+</li>
+<li>
+<p><strong>Company</strong> (referred to as either &quot;the Company&quot;, &quot;We&quot;, &quot;Us&quot; or &quot;Our&quot; in this Agreement) refers to IM Smart Luxury, 248 Benin - Lagos road, Uwasota, Benin city, Edo state, Nigeria.</p>
+</li>
+<li>
+<p><strong>Country</strong> refers to:  Nigeria</p>
+</li>
+<li>
+<p><strong>Device</strong> means any device that can access the Service such as a computer, a cellphone or a digital tablet.</p>
+</li>
+<li>
+<p><strong>Personal Data</strong> is any information that relates to an identified or identifiable individual.</p>
+</li>
+<li>
+<p><strong>Service</strong> refers to the Application.</p>
+</li>
+<li>
+<p><strong>Service Provider</strong> means any natural or legal person who processes the data on behalf of the Company. It refers to third-party companies or individuals employed by the Company to facilitate the Service, to provide the Service on behalf of the Company, to perform services related to the Service or to assist the Company in analyzing how the Service is used.</p>
+</li>
+<li>
+<p><strong>Usage Data</strong> refers to data collected automatically, either generated by the use of the Service or from the Service infrastructure itself (for example, the duration of a page visit).</p>
+</li>
+<li>
+<p><strong>You</strong> means the individual accessing or using the Service, or the company, or other legal entity on behalf of which such individual is accessing or using the Service, as applicable.</p>
+</li>
 </ul>
-<p style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">Property-related Information:</span></p>
+<h2>Collecting and Using Your Personal Data</h2>
+<h3>Types of Data Collected</h3>
+<h4>Personal Data</h4>
+<p>While using Our Service, We may ask You to provide Us with certain personally identifiable information that can be used to contact or identify You. Personally identifiable information may include, but is not limited to:</p>
 <ul>
-    <li style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">Property preferences</span></li>
-    <li style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">Transaction history</span></li>
-    <li style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">Financial information for transactions</span></li>
+<li>
+<p>Email address</p>
+</li>
+<li>
+<p>First name and last name</p>
+</li>
+<li>
+<p>Phone number</p>
+</li>
+<li>
+<p>Address, State, Province, ZIP/Postal code, City</p>
+</li>
+<li>
+<p>Usage Data</p>
+</li>
 </ul>
-<p style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">Usage Data:</span></p>
-<p style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">Log files, IP addresses, browser type, pages visited, and other usage data when interacting with our website or mobile application.</span></p>
-<p><span style="font-family: Georgia, serif;"><br></span></p>
-<p><br></p>
-<p><span style="font-family: Georgia, serif;"><strong><span style="font-size: 24px;">How do we use your information?</span></strong></span></p>
-<p style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">Service Provision:</span></p>
+<h4>Usage Data</h4>
+<p>Usage Data is collected automatically when using the Service.</p>
+<p>Usage Data may include information such as Your Device's Internet Protocol address (e.g. IP address), browser type, browser version, the pages of our Service that You visit, the time and date of Your visit, the time spent on those pages, unique device identifiers and other diagnostic data.</p>
+<p>When You access the Service by or through a mobile device, We may collect certain information automatically, including, but not limited to, the type of mobile device You use, Your mobile device unique ID, the IP address of Your mobile device, Your mobile operating system, the type of mobile Internet browser You use, unique device identifiers and other diagnostic data.</p>
+<p>We may also collect information that Your browser sends whenever You visit our Service or when You access the Service by or through a mobile device.</p>
+<h3>Use of Your Personal Data</h3>
+<p>The Company may use Personal Data for the following purposes:</p>
 <ul>
-    <li style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">To provide personalized real estate services based on your preferences.</span></li>
-    <li style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">Facilitate property transactions and agreements.</span></li>
+<li>
+<p><strong>To provide and maintain our Service</strong>, including to monitor the usage of our Service.</p>
+</li>
+<li>
+<p><strong>To manage Your Account:</strong> to manage Your registration as a user of the Service. The Personal Data You provide can give You access to different functionalities of the Service that are available to You as a registered user.</p>
+</li>
+<li>
+<p><strong>For the performance of a contract:</strong> the development, compliance and undertaking of the purchase contract for the products, items or services You have purchased or of any other contract with Us through the Service.</p>
+</li>
+<li>
+<p><strong>To contact You:</strong> To contact You by email, telephone calls, SMS, or other equivalent forms of electronic communication, such as a mobile application's push notifications regarding updates or informative communications related to the functionalities, products or contracted services, including the security updates, when necessary or reasonable for their implementation.</p>
+</li>
+<li>
+<p><strong>To provide You</strong> with news, special offers and general information about other goods, services and events which we offer that are similar to those that you have already purchased or enquired about unless You have opted not to receive such information.</p>
+</li>
+<li>
+<p><strong>To manage Your requests:</strong> To attend and manage Your requests to Us.</p>
+</li>
+<li>
+<p><strong>For business transfers:</strong> We may use Your information to evaluate or conduct a merger, divestiture, restructuring, reorganization, dissolution, or other sale or transfer of some or all of Our assets, whether as a going concern or as part of bankruptcy, liquidation, or similar proceeding, in which Personal Data held by Us about our Service users is among the assets transferred.</p>
+</li>
+<li>
+<p><strong>For other purposes</strong>: We may use Your information for other purposes, such as data analysis, identifying usage trends, determining the effectiveness of our promotional campaigns and to evaluate and improve our Service, products, services, marketing and your experience.</p>
+</li>
 </ul>
-<p style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">Communication:</span></p>
+<p>We may share Your personal information in the following situations:</p>
 <ul>
-    <li style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">Send updates, newsletters, and promotional material related to real estate services.</span></li>
+<li><strong>With Service Providers:</strong> We may share Your personal information with Service Providers to monitor and analyze the use of our Service,  to contact You.</li>
+<li><strong>For business transfers:</strong> We may share or transfer Your personal information in connection with, or during negotiations of, any merger, sale of Company assets, financing, or acquisition of all or a portion of Our business to another company.</li>
+<li><strong>With Affiliates:</strong> We may share Your information with Our affiliates, in which case we will require those affiliates to honor this Privacy Policy. Affiliates include Our parent company and any other subsidiaries, joint venture partners or other companies that We control or that are under common control with Us.</li>
+<li><strong>With business partners:</strong> We may share Your information with Our business partners to offer You certain products, services or promotions.</li>
+<li><strong>With other users:</strong> when You share personal information or otherwise interact in the public areas with other users, such information may be viewed by all users and may be publicly distributed outside.</li>
+<li><strong>With Your consent</strong>: We may disclose Your personal information for any other purpose with Your consent.</li>
 </ul>
-<p style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">Legal Compliance:</span></p>
+<h3>Retention of Your Personal Data</h3>
+<p>The Company will retain Your Personal Data only for as long as is necessary for the purposes set out in this Privacy Policy. We will retain and use Your Personal Data to the extent necessary to comply with our legal obligations (for example, if we are required to retain your data to comply with applicable laws), resolve disputes, and enforce our legal agreements and policies.</p>
+<p>The Company will also retain Usage Data for internal analysis purposes. Usage Data is generally retained for a shorter period of time, except when this data is used to strengthen the security or to improve the functionality of Our Service, or We are legally obligated to retain this data for longer time periods.</p>
+<h3>Transfer of Your Personal Data</h3>
+<p>Your information, including Personal Data, is processed at the Company's operating offices and in any other places where the parties involved in the processing are located. It means that this information may be transferred to — and maintained on — computers located outside of Your state, province, country or other governmental jurisdiction where the data protection laws may differ than those from Your jurisdiction.</p>
+<p>Your consent to this Privacy Policy followed by Your submission of such information represents Your agreement to that transfer.</p>
+<p>The Company will take all steps reasonably necessary to ensure that Your data is treated securely and in accordance with this Privacy Policy and no transfer of Your Personal Data will take place to an organization or a country unless there are adequate controls in place including the security of Your data and other personal information.</p>
+<h3>Delete Your Personal Data</h3>
+<p>You have the right to delete or request that We assist in deleting the Personal Data that We have collected about You.</p>
+<p>Our Service may give You the ability to delete certain information about You from within the Service.</p>
+<p>You may update, amend, or delete Your information at any time by signing in to Your Account, if you have one, and visiting the account settings section that allows you to manage Your personal information. You may also contact Us to request access to, correct, or delete any personal information that You have provided to Us.</p>
+<p>Please note, however, that We may need to retain certain information when we have a legal obligation or lawful basis to do so.</p>
+<h3>Disclosure of Your Personal Data</h3>
+<h4>Business Transactions</h4>
+<p>If the Company is involved in a merger, acquisition or asset sale, Your Personal Data may be transferred. We will provide notice before Your Personal Data is transferred and becomes subject to a different Privacy Policy.</p>
+<h4>Law enforcement</h4>
+<p>Under certain circumstances, the Company may be required to disclose Your Personal Data if required to do so by law or in response to valid requests by public authorities (e.g. a court or a government agency).</p>
+<h4>Other legal requirements</h4>
+<p>The Company may disclose Your Personal Data in the good faith belief that such action is necessary to:</p>
 <ul>
-    <li style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">Comply with legal requirements and regulations in Nigeria.</span></li>
+<li>Comply with a legal obligation</li>
+<li>Protect and defend the rights or property of the Company</li>
+<li>Prevent or investigate possible wrongdoing in connection with the Service</li>
+<li>Protect the personal safety of Users of the Service or the public</li>
+<li>Protect against legal liability</li>
 </ul>
-<p><br></p>
-<p><span style="font-family: Georgia, serif;"><br></span></p>
-<p><span style="font-family: Georgia, serif;"><strong><span style="font-size: 24px;">Data Security</span></strong></span></p>
-<p style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">SpaceVilla Africa employs industry-standard security measures to protect your personal information. This includes encryption, access controls, and regular security audits.</span></p>
-<p><br></p>
-<p><span style="font-family: Georgia, serif;"><br></span></p>
-<p><span style="font-size: 24px; font-family: Georgia, serif;"><strong>Third-Party Disclosure</strong></span></p>
-<p style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as required by law or in connection with the sale, merger, or acquisition of our company.</span></p>
-<p><span style="font-family: Georgia, serif;"><br></span></p>
-<p><br></p>
-<p><span style="font-size: 24px; font-family: Georgia, serif;"><strong>Cookies and Tracking Technologies</strong></span></p>
-<p style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">We use cookies and similar technologies to enhance user experience, analyze website traffic, and personalize content. By using our services, you consent to the use of these technologies.</span></p>
-<p><br></p>
-<p><span style="font-family: Georgia, serif;"><br></span></p>
-<p><span style="font-size: 24px; font-family: Georgia, serif;"><strong>Your Rights</strong></span></p>
-<p style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">You have the right to access, correct, or delete your personal information. To exercise these rights or inquire about our privacy practices, contact us at [<a data-fr-linked="true" href="mailto:contact@spacevillaafrica.com">contact@spacevillaafrica.com</a>].</span></p>
-<p><br></p>
-<p><span style="font-family: Georgia, serif;"><br></span></p>
-<p><span style="font-size: 24px; font-family: Georgia, serif;"><strong>Changes to This Policy</strong></span></p>
-<p style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">SpaceVilla Africa reserves the right to update this Privacy Policy at any time. We will notify users of any material changes via email or through our website.</span></p>
-<p><br></p>
-<p><span style="font-family: Georgia, serif;"><br></span></p>
-<p><span style="font-size: 24px; font-family: Georgia, serif;"><strong>Contact Information</strong></span></p>
-<p style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">If you have any questions or concerns regarding this Privacy Policy, please contact us at:</span></p>
-<p style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">Abuja, Nigeria</span></p>
-<p style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">spacevillaafrica.org</span></p>
-<p style="line-height: 1.5;"><span style="font-family: Georgia, serif; font-size: 18px;">+234-9726289100</span></p>
-""";
+<h3>Security of Your Personal Data</h3>
+<p>The security of Your Personal Data is important to Us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While We strive to use commercially acceptable means to protect Your Personal Data, We cannot guarantee its absolute security.</p>
+<h2>Children's Privacy</h2>
+<p>Our Service does not address anyone under the age of 13. We do not knowingly collect personally identifiable information from anyone under the age of 13. If You are a parent or guardian and You are aware that Your child has provided Us with Personal Data, please contact Us. If We become aware that We have collected Personal Data from anyone under the age of 13 without verification of parental consent, We take steps to remove that information from Our servers.</p>
+<p>If We need to rely on consent as a legal basis for processing Your information and Your country requires consent from a parent, We may require Your parent's consent before We collect and use that information.</p>
+<h2>Links to Other Websites</h2>
+<p>Our Service may contain links to other websites that are not operated by Us. If You click on a third party link, You will be directed to that third party's site. We strongly advise You to review the Privacy Policy of every site You visit.</p>
+<p>We have no control over and assume no responsibility for the content, privacy policies or practices of any third party sites or services.</p>
+<h2>Changes to this Privacy Policy</h2>
+<p>We may update Our Privacy Policy from time to time. We will notify You of any changes by posting the new Privacy Policy on this page.</p>
+<p>We will let You know via email and/or a prominent notice on Our Service, prior to the change becoming effective and update the &quot;Last updated&quot; date at the top of this Privacy Policy.</p>
+<p>You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.</p>
+<h2>Contact Us</h2>
+<p>If you have any questions about this Privacy Policy, You can contact us:</p>
+<ul>
+<li>
+<p>By email: info@imtechng.com</p>
+</li>
+<li>
+<p>By phone number: +2347042888341 or +2349127703006</p>
+</li>
+</ul>
+''';
 
-const legal = """ 
-
-    <p class="sample" style="color: red; text-align: center;"><span style=" color: rgb(0, 0, 0); font-size: 32px; font-weight:600;">Legal</span></p>
-    <p class="sample" style="color: red; text-align: center;"><span style="background-color: rgb(255, 255, 255); color: rgb(3, 152, 85); font-size: 13px;font-weight:600;">Updated as of 01/20/2024</span></p>
-    <p class="sample" style="color: red; line-break: anywhere; fontWeight: 400;line-height:1.5;"><span style="background-color: rgb(255, 255, 255); color: rgb(102, 112, 133); font-size: 18px;">This Agreement ("Agreement") is entered  on this [Date] and between SpaceVilla Africa, a real company located at [Address] ("Company"),and the undersigned party ("Client" or "Agent").</span></p>
-    <p><br></p>
-    
-    <p><strong><span style="font-size: 20px;font-weight:600;font-weight: 600;color:rgb(57,57,57);">1. Fraud Prevention:</span></strong></p>
-    
-    <p><span style="font-size: 18px; color: rgb(57, 57, 57);font-weight: 400;">1.1 Client Verification:</span></p>
-    
-    <ul>
-        <li style="color: rgb(102, 112, 133);font-size:18px;font-weight:400;">The Client acknowledges Africa may employ verification processes to confirm the identity and legitimacy of clients.false  or engaging in fraudulent activities may in legal action.</li>
-    </ul>
-    
-    <p><span style="font-size: 18px; color: rgb(57, 57, 57);font-weight: 400;">1.2 Transaction Transparency:</span></p>
-   
-    <ul>
-        <li style="color: rgb(102, 112, 133); font-size: 18px;font-weight:400;">Both parties agree to maintain transparency in  real estate transactions facilitated through SpaceVilla Africa. Any to or misrepresent information related to property transactions will be considered a breach of Agreement.</li>
-    </ul>
-   
-    <p><span style="font-size: 20px; color: rgb(57, 57, 57);font-weight: 600;">2. Real Estate Rights Protection:</span></p>
-  
-    <p><span style="font-size: 18px; color: rgb(57, 57, 57);font-weight: 400;">2.1 Intellectual Property:</span></p>
-   
-    <ul>
-        <li style="color: rgb(102, 112, 133);font-size:18px;font-weight:400;"><span style="font-size: 18px;">Africa retains all  property rights associated its website, application, branding, proprietary real estate data. Unauthorized use, reproduction, or distribution  prohibited.</span></li>
-    </ul>
-  
-    <p><span style="font-size: 18px; color: rgb(57, 57, 57);font-weight: 400;">2.2 Confidentiality:</span></p>
-    
-    <ul>
-        <li style="font-size: 18px; color: rgb(102, 112, 133);font-weight:400;">Both the Client and the Agent agree to keep confidential all proprietary and sensitive information obtained the of their engagement with SpaceVilla Africa, including but not to client details, transaction data, and business strategies.</li>
-    </ul>
-   
-    <p><span style="font-size: 18px; color: rgb(57, 57, 57);font-weight: 400;">2.3 Exclusive Right to Represent:</span></p>
-   
-    <ul>
-        <li style="font-size: 18px; color: rgb(102, 112, 133);font-weight:400;">The Client acknowledges that SpaceVilla Africa has an exclusive to represent them in real estate facilitated through the platform. Attempts to engage other outside of the SpaceVilla Africa platform may result in termination services.</li>
-    </ul>
-   
-    <p><span style="font-size: 20px; color: rgb(57, 57, 57);font-weight: 600;">3. Legal Consequences:</span></p>
-  
-    <p><span style="font-size: 18px; color: rgb(57, 57, 57);font-weight: 400;">3.1 Breach of Agreement:</span></p>
-    
-    <ul>
-        <li style="font-size: 18px; color: rgb(102, 112, 133);font-weight:400;">Any breach of this Agreement, including fraudulent activities violation of real estate rights, may result in legal action, termination of services, and other remedies available under Nigerian law.</li>
-    </ul>
-    
-    <p><span style="font-size: 20px; color: rgb(57, 57, 57);font-weight: 600;">4. Governing Law and Dispute Resolution:</span></p>
-
-    <p><span style="color: rgb(57, 57, 57); font-size: 18px;font-weight: 400;">4.1 Governing Law:</span></p>
-   
-    <ul>
-        <li style="font-size: 18px; color: rgb(102, 112, 133);font-weight:400;"> Agreement shall be governed by construed in accordance with the of Nigeria.</li>
-    </ul>
-   
-    <p><span style="font-size: 18px; color: rgb(57, 57, 57);font-weight: 400;">4.2 Dispute Resolution:</span></p>
-    
-    <ul>
-        <li style="font-size: 18px; color: rgb(102, 112, 133);font-weight:400;">Any arising out of or in connection with this Agreement shall resolved through in accordance with the rules of [Arbitration Institution] in Nigeria.</li>
-    </ul>
-   
-    <p><span style="text-align: start; color: rgb(57, 57, 57); font-size: 20px;font-weight:600;">5. Miscellaneous:</span></p>
-
-    <p><span style="font-size: 18px; color: rgb(57, 57, 57);font-weight:400;">5.1 Amendments:</span></p>
-    
-    <ul>
-        <li style="font-size: 18px; color: rgb(102, 112, 133);font-weight:400;">This Agreement may only be in writing and signed  both parties.</li>
-    </ul>
-    
-    <p><span style="font-size: 18px; color: rgb(102, 112, 133);font-weight:400;">IN WITNESS WHEREOF, the hereto have executed this Agreement as of the date first written.</span></p>
-
-
-""";
+String termsOfService = '''
+<p><strong>RULES AND REGULATIONS GUIDING CLIENTS OF IMSMART</strong><br><br>1. Upon lodging a caution fee is to be paid. This amount would be refunded within 24hrs if there is no damage of properties during your period of stay at IMSMART LUXURY HOMES.</p>
+<p>2. No smoking allowed inside the apartment. If there is need for smoking. Please use the allocated areas within the premises.</p>
+<p>3. No form of assault or molestation of staffs/employee would be condoled by the management.</p>
+<p>4. No property of IMSMART luxury homes should be taken while checking out of our apartments these includes kitchen utensils towels decoration equipment etc.</p>
+<p>5. No use of hard drugs within premises.</p>
+<p>6. No weapon or fire arms are allowed in premises except you are in the force and have a license to back up such weapon.</p>
+<p>7. Clients are not expected to pass the apartment to a third party.</p>
+<p>8. The maximum number of persons allowed in an apartment is 5(five). If more than , clients are advised to pay for more than one vacant apartment.</p>
+<p>9. All clients are expected to maintain peace and conduct themselves in an orderly manner in order to make other client comfortable. In case of any issue within clients in the apartment please locate our security team to help resolve the issue.</p>
+<p>10. The use of music: volumes of music should be reduced so as not to cause discomfort to other clients within the premises.</p>
+''';

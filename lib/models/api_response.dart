@@ -1,15 +1,19 @@
-class APIResponse<T>{
+import 'dart:convert';
+import 'dart:developer';
+
+class APIResponse<T> {
   var data;
   bool error;
   var message;
 
-  APIResponse({this.data, this.error=false, this.message});
+  APIResponse({this.data, this.error = false, this.message});
 
-  factory APIResponse.fromJson(Map<String, dynamic> data){
+  factory APIResponse.fromJson(Map<String, dynamic> data) {
+    log("Response======================>${json.encode(data)}");
     return APIResponse(
-        error: data['status'] != null ? !data['status'] : data['error'] ?? false,
-        message: data['message'],
-        data: data['data']
+      error: data['success'] != null ? !data['success'] : true,
+      message: data['message'] ?? "",
+      data: data['data'],
     );
   }
 }

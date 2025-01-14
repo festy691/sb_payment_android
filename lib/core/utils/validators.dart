@@ -14,25 +14,6 @@ class Validators {
       return null;
     };
   }
- static String? validateCACNumber(String value) {
-    // Check if CAC number starts with BN, RC, IT, LP, or LLP
-    if (!(value.startsWith('BN') ||
-        value.startsWith('RC') ||
-        value.startsWith('IT') ||
-        value.startsWith('LP') ||
-        value.startsWith('LLP'))) {
-      return 'CAC Number must start with BN, RC, IT, LP, or LLP';
-    }
-    // Check if the length is within the allowed range
-    if (value.length > 14) {
-      return 'CAC Number length must be at most 14 characters';
-    }
-    // Check if the rest of the characters are digits
-    if (!RegExp(r'^[0-9]+$').hasMatch(value.substring(2))) {
-      return 'CAC Number must contain only digits after prefix';
-    }
-    return null; // Return null if validation passes
-  }
 
   static String? Function(String?) validateAlpha({String? error}) {
     return (String? value) {
@@ -71,7 +52,7 @@ class Validators {
     };
   }
 
-  static String? Function(String?) validateEmail(String? value, {String? error}) {
+  static String? Function(String?) validateEmail({String? error}) {
     return (String? value) {
       if (value!.isEmpty) {
         return error ?? 'Enter a valid email address';
@@ -184,7 +165,7 @@ class Validators {
     return null;
   }
 
-  static String? Function(String?) validateString(String? value, {String? error}) {
+  static String? Function(String?) validateString({String? error}) {
     return (String? value) {
       if (value == null || value.isEmpty || value.trim().isEmpty) {
         return error ?? 'Field is required.';
@@ -221,7 +202,7 @@ class Validators {
 
   static String? Function(File) validateFile({String? error}) {
     return (File file) {
-      if (file.path.isEmpty) {
+      if (file == null || file.path.isEmpty) {
         return error ?? 'Invalid File.';
       }
       return null;
@@ -286,7 +267,7 @@ class Validators {
   static bool _hasSpecialCharacter(String? value) {
     var specialChars = "<>@!#\$%^&*()_+[]{}?:;|'\"\\,./~`-=";
     for (int i = 0; i < specialChars.length; i++) {
-      if (value!.contains(specialChars[i])) {
+      if (value!.indexOf(specialChars[i]) > -1) {
         return true;
       }
     }
@@ -294,22 +275,24 @@ class Validators {
   }
 
   static String? validPassword({String? value}) {
-    if (value == null || value.isEmpty || value.trim().isEmpty) {
+    if (value == null || value.isEmpty || value.trim().isEmpty)
       return 'Password is required';
-    } else if (!hasLowercase(value))
+    else if (!hasLowercase(value))
       return 'Password must have lowercase letter';
     else if (!hasUppercase(value))
       return 'Password must have uppercase letter';
     else if (!hasNumber(value))
       return 'Password must have number';
+    else if (!_hasSpecialCharacter(value))
+      return 'Password must have a special character';
     else if (!has8Character(value)) return 'Password must be 8-255 characters';
     return null;
   }
 
   static String? validConfirmPassword({String? value1, String? value2}) {
-    if (value1 == null || value1.isEmpty || value1.trim().isEmpty) {
+    if (value1 == null || value1.isEmpty || value1.trim().isEmpty)
       return 'Password is required';
-    } else if (value2 == null || value2.isEmpty || value2.trim().isEmpty)
+    else if (value2 == null || value2.isEmpty || value2.trim().isEmpty)
       return 'Confirm Password is required';
     else if (value1 != value2) return 'Password does not match';
     return null;
@@ -321,34 +304,20 @@ class Validators {
   }
 
   static bool hasLowercase(String? value) {
-    if (value!.isNotEmpty && RegExp(r'^(?=.*?[a-z])').hasMatch(value)) {
+    if (value!.isNotEmpty && RegExp(r'^(?=.*?[a-z])').hasMatch(value))
       return true;
-    }
     return false;
   }
 
   static bool hasUppercase(String? value) {
-    if (value!.isNotEmpty && RegExp(r'^(?=.*?[A-Z])').hasMatch(value)) {
+    if (value!.isNotEmpty && RegExp(r'^(?=.*?[A-Z])').hasMatch(value))
       return true;
-    }
     return false;
   }
 
   static bool hasNumber(String? value) {
-    if (value!.isNotEmpty && RegExp(r'^(?=.*?[0-9])').hasMatch(value)) {
+    if (value!.isNotEmpty && RegExp(r'^(?=.*?[0-9])').hasMatch(value))
       return true;
-    }
     return false;
-  }
-  static String? fullname(String? name, [String title = "Full Name"]) {
-    if (name != null) {
-      if (name.isEmpty) {
-        return "Your $title cannot be empty";
-      } else if (!name.contains(" ") || name.length < 4) {
-        return "Invalid $title";
-      }
-      return null;
-    }
-    return "Invalid $title";
   }
 }

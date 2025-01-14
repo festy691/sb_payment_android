@@ -10,8 +10,8 @@ class AuthProvider with ChangeNotifier {
 
   List<BankAccountModel> bankList = [
     BankAccountModel(id: "0", accountName: "Checkout Earth", accountNumber: "0011223344", bankName: "Bains Credit"),
-    BankAccountModel(id: "0", accountName: "Checkout Earth", accountNumber: "7711994488", bankName: "Fidelity"),
-    BankAccountModel(id: "0", accountName: "Checkout Earth", accountNumber: "6655338899", bankName: "Wema"),
+    BankAccountModel(id: "1", accountName: "Checkout Earth", accountNumber: "7711994488", bankName: "Fidelity"),
+    BankAccountModel(id: "3", accountName: "Checkout Earth", accountNumber: "6655338899", bankName: "Wema"),
   ];
 
 

@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
 import 'package:sb_payment_sdk/core/data/session_manager.dart';
 import 'package:sb_payment_sdk/core/network/api_error.dart';
 import 'package:sb_payment_sdk/core/network/app_interceptor.dart';
@@ -14,7 +12,7 @@ import 'package:sb_payment_sdk/core/network/url_config.dart';
 /// Using this class automatically handle, token management, logging, global
 
 void printWrapped(String text) {
-  final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
+  final pattern = new RegExp('.{1,800}'); // 800 is the size of each chunk
   pattern.allMatches(text).forEach((match) => log(match.group(0) ?? ""));
 }
 
@@ -37,13 +35,12 @@ class NetworkService {
 
   /// Initialize essential class properties
   void _initialiseDio() {
-    dio = Dio(BaseOptions(
+    dio = new Dio(BaseOptions(
       connectTimeout: CONNECT_TIME_OUT,
       receiveTimeout: RECEIVE_TIME_OUT,
       baseUrl: baseUrl ?? UrlConfig.coreBaseUrl,
     ));
     dio!.interceptors
-      //..add(AppInterceptor(SessionManager.instance.authToken))
       ..add(LogInterceptor(requestBody: true, logPrint: printDioLogs));
   }
 
@@ -67,24 +64,6 @@ class NetworkService {
           });
   }
 
-  Future<String?> fetchUrl(Uri uri, {Map<String, String>? headers}) async {
-    _initialiseDio();
-    try {
-      final response = await http.get(uri, headers: headers);
-      if (response.statusCode == 200) {
-        return response.body;
-      }
-    } catch (error, stackTrace) {
-      log(error.toString());
-      // var apiError = ApiError.fromDio(error);
-      // if (apiError.errorType == 401) {
-      //   //eventBus.fire(LogoutEvent());
-      // }
-      //return Future.error(apiError, stackTrace);
-    }
-    return null;
-  }
-
   /// Factory constructor used mainly for injecting an instance of [Dio] mock
   NetworkService.test(this.dio);
 
@@ -96,11 +75,14 @@ class NetworkService {
     FormData? formData,
     ResponseType responseType = ResponseType.json,
     classTag = '',
+    downloadPath = '',
   }) async {
     _initialiseDio();
     Response response;
     var params = queryParams ?? {};
-
+    if (params.keys.contains("searchTerm")) {
+      params["searchTerm"] = Uri.encodeQueryComponent(params["searchTerm"]);
+    }
     try {
       switch (method) {
         case RequestMethod.post:
@@ -121,6 +103,20 @@ class NetworkService {
           response = await dio!.put(path,
               queryParameters: params, data: data, options: await getOption());
           break;
+        case RequestMethod.download:
+          response = await dio!.get(
+            path,
+            //downloadPath,
+            queryParameters: params,
+            //data: data,
+            options: await getOption(responseType: ResponseType.bytes),
+            onReceiveProgress: (received, total) {
+              if (total != -1) {
+                log("Download progress=============> ${(received / total * 100).toStringAsFixed(0)}%");
+              }
+            },
+          );
+          break;
         case RequestMethod.delete:
           response = await dio!.delete(path,
               queryParameters: params, data: data, options: await getOption());
@@ -131,9 +127,9 @@ class NetworkService {
               queryParameters: params,
               options: await getOption(isJson: false),
               onSendProgress: (sent, total) {
-            // eventBus
-            //     .fire(
-            //     FileUploadProgressEvent(FileUploadProgress(sent, total, tag: classTag)));
+            if (total != -1) {
+              log("Upload progress=============> ${(sent / total * 100).toStringAsFixed(0)}%");
+            }
           });
           break;
       }
@@ -148,4 +144,4 @@ class NetworkService {
   }
 }
 
-enum RequestMethod { post, get, put, delete, upload, patch }
+enum RequestMethod { post, get, put, delete, upload, patch, download }

@@ -1,4 +1,4 @@
-import 'package:sb_payment_sdk/core/utils/app_theme.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -12,29 +12,29 @@ class TextView extends StatelessWidget {
   final TextStyle? textStyle;
   final Color? textColor;
 
-  const TextView(
-      {
-        required this.text,
-        this.textOverflow = TextOverflow.clip,
-        this.textAlign = TextAlign.left,
-        this.onTap,
-        this.textStyle,
-        this.textColor,
-        this.textSize,
-        this.maxLines,});
+  TextView({
+    required this.text,
+    this.textOverflow = TextOverflow.clip,
+    this.textAlign = TextAlign.left,
+    this.onTap,
+    this.textStyle,
+    this.textColor,
+    this.textSize,
+    this.maxLines,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
       child: Text(
         text,
-        style: textStyle ?? TextStyle(
-            fontFamily: fontFamily,
-            fontSize: textSize ?? ScreenUtil().setSp(14),
-            fontWeight: FontWeight.w400,
-            color: textColor
-        ),
+        style: textStyle ??
+            GoogleFonts.inter(
+              fontSize: textSize ?? 14.sp,
+              fontWeight: FontWeight.w400,
+              color: textColor,
+            ),
         textAlign: textAlign,
         overflow: textOverflow,
         maxLines: maxLines,
